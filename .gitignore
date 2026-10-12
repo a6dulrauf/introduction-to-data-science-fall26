@@ -1,0 +1,39 @@
+# ==========================================
+# Office & Presentation Files (Temporary/Lock files)
+# ==========================================
+~$*.docx
+~$*.xlsx
+~$*.pptx
+~$*.doc
+~$*.xls
+~$*.ppt
+
+# LibreOffice / OpenOffice lock files
+.~lock.*.odt#
+.~lock.*.ods#
+.~lock.*.odp#
+
+# ==========================================
+# OS-Specific Garbage (Mac / Windows)
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+[Dd]esktop.ini
+
+# ==========================================
+# Grading & Private Data (CRITICAL)
+# ==========================================
+/private/
+/grading/
+
+# ==========================================
+# Text Editor & IDE Backups
+# ==========================================
+*.bak
+*.tmp
+*.swp
+.vscode/
+.idea/
