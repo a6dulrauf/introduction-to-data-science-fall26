@@ -1,0 +1,81 @@
+order_id,order_date,student_id,item,category,qty,price,payment,status
+1001,2026-09-14,S126,Biryani,Meals,2,300,Card,Done
+1002,2026-09-14,S106,Chai,Drinks,2,40,Easypaisa,done
+1003,2026-09-14,S105,Chai,Drinks,1,40,JazzCash,done
+1004,2026-09-14,S111,Paratha Roll,Snacks,1,180,JazzCash,done
+1005,2026-09-14,S119,Chai,Drinks,3,,Cash,done
+1006,2026-09-14,S120,Samosa,Snacks,2,30,Cash,Done
+1007,2026-09-14,S119,Samosa,Snacks,1,30,JazzCash,done
+1008,2026-09-14,S130,Chai,Drinks,1,40,Easypaisa,done
+1009,2026-09-14,S124,Samosa,snacks,3,30,Easypaisa,done
+1010,2026-09-14,S129,Biryani,Meals,2,300,Easypaisa,done
+1011,2026-09-15,S104,Chai,Drinks,1,40,Easypaisa,Done
+1012,2026-09-15,S123,Cold Drink,Drinks,2,70,,done
+1013,2026-09-15,S116,Zinger Burger,Meals,1,350,Easypaisa,done
+1014,2026-09-15,S103,Paratha Roll,Snacks,1,180,Cash,done
+1015,2026-09-15,S120,Fries,Snacks,2,120,Cash,done
+1016,2026-09-15,S107,Biryani,Meals,3,300,Cash,done
+1017,2026-09-15,S108,Samosa,Snacks,-2,30,Cash,done
+1018,2026-09-16,S119,Samosa,Snacks,1,30,Cash,done
+1019,2026-09-16,S111,Zinger Burger,Meals,3,350,Easypaisa,done
+1020,2026-09-16,S102,Chai,Drinks,1,40,JazzCash,ok
+1021,2026-09-16,S102,Paratha Roll,Snacks,1,180,Easypaisa,done
+1022,2026-09-16,S124,Samosa,Snacks,1,30,Card,done
+1023,2026-09-16,S115,Chai,Drinks,2,40,Card,done
+1024,2026-09-16,S124,Zinger Burger,Meals,3,350,Cash,done
+1025,2026-09-16,S112,Biryani,Meals,1,300,JazzCash,Done
+1026,2026-09-16,S114,Zinger Burger,Meals,1,350,JazzCash,done
+1027,2026-09-16,S113,Fries,Snacks,2,120,,done
+1028,2026-09-17,S103,Chai,Drinks,3,40,Cash,Done
+1029,2026-09-17,S124,Zinger Burger,Meals,1,350,JazzCash,Done
+1030,2026-09-17,S115,Fries,Snacks,2,120,JazzCash,pending
+1031,2026-09-17,S125,Chai,Drinks,2,40,Cash,done
+1032,2026-09-17,S101,Chai,Drinks,1,40,Cash,done
+1033,2026-09-31,S130,Fries,Snacks,2,120,Card,pending
+1034,2026-09-18,S105,Samosa,Snacks,3,30,Easypaisa,done
+1035,2026-09-18,S129,Chai,Drinks,1,40,JazzCash,done
+1036,2026-09-18,S113,Cold Drink,Drinks,3,70,Card,done
+1037,2026-09-18,S126,Samosa,Snacks,1,30,Cash,done
+1038,2026-09-18,S111,Fries,Snacks,1,,Cash,done
+1039,2026-09-18,S129,Samosa,Snacks,1,30,Cash,Done
+1040,2026-09-21,S117,Chai,Drinks,1,40,JazzCash,done
+1041,2026-09-21,S117,Chai,Drinks,1,40,JazzCash,done
+1042,2026-09-21,S111,Samosa,Snacks,3,30,Easypaisa,done
+1043,2026-09-21,S102,Chai,Drinks,1,40,Easypaisa,done
+1044,2026-09-21,S119,Paratha Roll,Snacks,1,180,Card,done
+1045,2026-09-21,S121,Samosa,Snacks,1,30,JazzCash,done
+1046,22/09/2026,S127,Chai,Drinks,1,40,Cash,done
+1047,2026-09-21,S121,Paratha Roll,Snacks,1,180,JazzCash,done
+1048,2026-09-21,S121,Samosa,Snacks,1,30,Cash,done
+1049,2026-09-22,S116,Chai,Drinks,1,40,,done
+1050,2026-09-22,S118,Paratha Roll,Snacks,3,180,Cash,done
+1051,2026-09-22,S112,Cold Drink,Drinks,2,70,Easypaisa,done
+1052,2026-09-22,S106,Samosa,snacks,2,30,Cash,done
+1053,2026-09-22,S124,Biryani,Meals,2,300,Cash,done
+1054,2026-09-22,S129,Chai,Drinks,1,40,JazzCash,done
+1055,2026-09-23,S117,Fries,Snacks,1,120,JazzCash,ok
+1056,2026-09-23,S104,Biryani,Meals,3,300,Cash,done
+1057,2026-09-23,S103,Zinger Burger,Meals,1,350,Easypaisa,Done
+1058,2026-09-23,S109,Samosa,Snacks,60,30,Cash,done
+1059,2026-09-23,S115,Chai,Drinks,1,40,Easypaisa,done
+1060,2026-09-23,S130,Cold Drink,Drinks,1,70,Cash,pending
+1061,2026-09-24,S126,Fries,Snack,1,120,Cash,done
+1062,2026-09-24,S130,Fries,Snacks,1,120,JazzCash,done
+1063,2026-09-24,S124,Samosa,Snacks,2,30,,Done
+1064,2026-09-24,S123,Samosa,Snacks,1,30,Cash,done
+1065,2026-09-24,S127,Samosa,Snacks,3,30,Easypaisa,done
+1066,2026-09-24,S127,Samosa,Snacks,2,30,Card,done
+1067,2026-09-24,S128,Samosa,Snacks,2,30,Cash,done
+1068,2026-09-25,S118,Chai,Drinks,2,40,Card,done
+1069,2026-09-25,S118,Chai,Drinks,1,40,Easypaisa,done
+1070,2026-09-25,S118,Samosa,Snacks,1,,Easypaisa,Done
+1071,2026-09-25,S119,Samosa,Snacks,1,30,JazzCash,done
+1072,2026-09-28,S130,Chai,Drinks,2,40,JazzCash,done
+1073,2026-09-28,S130,Biryani,Meals,2,300,Card,done
+1074,2026-09-28,S111,Samosa,Snacks,2,30,JazzCash,done
+1075,2026-09-28,S114,Chai,Drinks,2,40,,Done
+1076,2026-09-28,S125,Chai,Drinks,1,40,Cash,done
+1077,2026-09-28,S122,Cold Drink,Drinks,1,70,Card,done
+1078,2026-09-28,S116,Cold Drink,Drinks,1,70,JazzCash,done
+1079,2026-09-28,S117,Chai,Drinks,2,40,Card,done
+1080,2026-09-28,S129,Paratha Roll,Snacks,2,180,Cash,done
