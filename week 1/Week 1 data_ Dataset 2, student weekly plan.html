@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Week 1 data: Dataset 2, student weekly plan</title>
+<style>:root{--bg:#f7f5ef;--ink:#1b2a41;--mut:#5f6b7a;--card:#ffffff;--bd:#e0dcd0;--ac:#d9661f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b}}
+:root[data-theme="dark"]{--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--ink);font-family:Helvetica,Arial,sans-serif;padding:24px;line-height:1.5;max-width:980px}
+h1{font-family:Georgia,serif;margin:0 0 8px}.mut{color:var(--mut)}.box{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 18px;margin:16px 0}
+code,textarea{font-family:'Courier New',monospace;font-size:13px}textarea{width:100%;height:260px;box-sizing:border-box;background:var(--card);color:var(--ink);border:1px solid var(--bd);border-radius:8px;padding:10px}
+button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-size:16px;cursor:pointer;margin:8px 0}.wrap{overflow-x:auto}table{border-collapse:collapse;font-size:13px}th,td{padding:4px 10px;border-bottom:1px solid var(--bd);white-space:nowrap;text-align:left}th{color:var(--ac)}pre{margin:6px 0;overflow-x:auto}</style></head>
+<body><h1>Week 1 data: Dataset 2, student weekly plan</h1><p class="mut">Companion table for the grain challenge: one row per student per week. Shares student_id with Dataset 1. Fictional data.</p>
+<div class="box"><b>Load it in Google Colab (2 steps)</b><ol><li>Press the button below to copy the data.</li><li>In a Colab cell, type the first line exactly, paste the data under it, and run the cell:<pre><code>%%writefile dataset2.csv
+(paste here)</code></pre></li></ol>Then check with <code>!head -3 dataset2.csv</code>. </div>
+<button id="b">Copy data</button> <span id="m" class="mut"></span>
+<textarea id="t" readonly>student_id,week_start,meal_plan
+S101,2026-09-14,No plan
+S101,2026-09-21,No plan
+S101,2026-09-28,No plan
+S102,2026-09-14,Meal card
+S102,2026-09-21,Meal card
+S102,2026-09-28,Meal card
+S103,2026-09-14,Meal card
+S103,2026-09-21,No plan
+S103,2026-09-28,No plan
+S104,2026-09-14,Meal card
+S104,2026-09-21,No plan
+S104,2026-09-28,No plan
+S105,2026-09-14,Meal card
+S105,2026-09-21,Meal card
+S105,2026-09-28,Meal card
+S106,2026-09-14,No plan
+S106,2026-09-21,No plan
+S106,2026-09-28,Meal card
+S107,2026-09-14,Meal card
+S107,2026-09-21,No plan
+S107,2026-09-28,No plan
+S108,2026-09-14,Meal card
+S108,2026-09-21,Meal card
+S108,2026-09-28,Meal card
+S109,2026-09-14,Meal card
+S109,2026-09-21,Meal card
+S109,2026-09-28,Meal card
+S111,2026-09-14,Meal card
+S111,2026-09-21,Meal card
+S111,2026-09-28,Meal card
+S112,2026-09-14,No plan
+S112,2026-09-21,No plan
+S112,2026-09-28,No plan
+S113,2026-09-14,Meal card
+S113,2026-09-21,Meal card
+S113,2026-09-28,Meal card
+S114,2026-09-14,Meal card
+S114,2026-09-21,Meal card
+S114,2026-09-28,No plan
+S115,2026-09-14,No plan
+S115,2026-09-21,No plan
+S115,2026-09-28,No plan
+S116,2026-09-14,No plan
+S116,2026-09-21,No plan
+S116,2026-09-28,No plan
+S117,2026-09-14,Meal card
+S117,2026-09-21,Meal card
+S117,2026-09-28,Meal card
+S118,2026-09-14,No plan
+S118,2026-09-21,No plan
+S118,2026-09-28,Meal card
+S119,2026-09-14,Meal card
+S119,2026-09-21,Meal card
+S119,2026-09-28,Meal card
+S120,2026-09-14,Meal card
+S120,2026-09-21,Meal card
+S120,2026-09-28,Meal card
+S121,2026-09-14,No plan
+S121,2026-09-21,No plan
+S121,2026-09-28,No plan
+S122,2026-09-14,Meal card
+S122,2026-09-21,Meal card
+S122,2026-09-28,Meal card
+S123,2026-09-14,Meal card
+S123,2026-09-21,Meal card
+S123,2026-09-28,No plan
+S124,2026-09-14,No plan
+S124,2026-09-21,No plan
+S124,2026-09-28,Meal card
+S125,2026-09-14,No plan
+S125,2026-09-21,No plan
+S125,2026-09-28,No plan
+S126,2026-09-14,No plan
+S126,2026-09-21,No plan
+S126,2026-09-28,No plan
+S127,2026-09-14,No plan
+S127,2026-09-21,No plan
+S127,2026-09-28,Meal card
+S128,2026-09-14,Meal card
+S128,2026-09-21,Meal card
+S128,2026-09-28,Meal card
+S129,2026-09-14,No plan
+S129,2026-09-21,No plan
+S129,2026-09-28,Meal card
+S130,2026-09-14,Meal card
+S130,2026-09-21,Meal card
+S130,2026-09-28,Meal card
+</textarea>
+<h3>First rows (preview)</h3><div class="wrap"><table><thead><tr><th>student_id</th><th>week_start</th><th>meal_plan</th></tr></thead><tbody><tr><td>S101</td><td>2026-09-14</td><td>No plan</td></tr><tr><td>S101</td><td>2026-09-21</td><td>No plan</td></tr><tr><td>S101</td><td>2026-09-28</td><td>No plan</td></tr><tr><td>S102</td><td>2026-09-14</td><td>Meal card</td></tr><tr><td>S102</td><td>2026-09-21</td><td>Meal card</td></tr><tr><td>S102</td><td>2026-09-28</td><td>Meal card</td></tr><tr><td>S103</td><td>2026-09-14</td><td>Meal card</td></tr><tr><td>S103</td><td>2026-09-21</td><td>No plan</td></tr></tbody></table></div>
+<script>var b=document.getElementById('b'),t=document.getElementById('t'),m=document.getElementById('m');
+b.onclick=function(){t.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}
+if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t.value).then(function(){m.textContent='Copied.';},function(){m.textContent='Press Ctrl+C (or long-press, Copy).';});return;}
+m.textContent=ok?'Copied.':'Press Ctrl+C (or long-press, Copy).';};</script></body></html>
