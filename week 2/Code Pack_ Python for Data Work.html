@@ -1,0 +1,170 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Code Pack: Python for Data Work</title><style>:root{--bg:#f7f5ef;--ink:#1b2a41;--mut:#5f6b7a;--card:#ffffff;--bd:#e0dcd0;--ac:#d9661f;--code:#1b2a41;--codefg:#f7f5ef;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}}
+:root[data-theme="dark"]{--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--ink);font-family:Helvetica,Arial,sans-serif;padding:24px;line-height:1.5;max-width:980px}
+h1{font-family:Georgia,serif;margin:0 0 6px}h2{font-size:18px;margin:0}.mut{color:var(--mut)}.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin:16px 0}.card.hl{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 16px;font-size:15px;cursor:pointer}
+pre{margin:0;background:var(--code);color:var(--codefg);border-radius:10px;padding:14px;overflow-x:auto;font-size:14px;line-height:1.45}code{font-family:'Courier New',monospace}</style></head><body><h1>Code Pack: Python for Data Work</h1><p class="mut">Every code sample from the slides, in order, with the indentation exactly as Python needs it. Press Copy code, then paste into a Colab cell. The first card is the complete file for the lab. Each card is labelled with its slide ID (for example W02-S06).</p><div class="card" id="c-file-profiler.py"><div class="top"><h2>Full file: profiler.py</h2><button onclick="cp('k-file-profiler.py',this)">Copy code</button></div><pre><code id="k-file-profiler.py">from __future__ import annotations
+
+import csv
+import statistics
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+MISSING = {&#x27;&#x27;, &#x27;na&#x27;, &#x27;n/a&#x27;, &#x27;null&#x27;, &#x27;none&#x27;, &#x27;nan&#x27;, &#x27;?&#x27;}
+Row = dict[str, str | None]
+Data = dict[str, list[str]]
+
+
+@dataclass
+class Column:
+    name: str
+    kind: str
+    missing: int
+    unique: int
+    low: float | None = None
+    high: float | None = None
+    mean: float | None = None
+    median: float | None = None
+
+
+def is_missing(value: str | None) -&gt; bool:
+    return value is None or value.strip().lower() in MISSING
+
+
+def infer_kind(values: list[str]) -&gt; str:
+    present = [v.strip() for v in values if not is_missing(v)]
+    if not present:
+        return &#x27;empty&#x27;
+    for caster, label in ((int, &#x27;int&#x27;), (float, &#x27;float&#x27;)):
+        try:
+            for v in present:
+                caster(v)
+            return label
+        except ValueError:
+            continue
+    return &#x27;str&#x27;
+
+
+def profile(name: str, raw: list[str]) -&gt; Column:
+    present = [v.strip() for v in raw if not is_missing(v)]
+    kind = infer_kind(raw)
+    col = Column(name, kind, len(raw) - len(present),
+                 len(set(present)))
+    if kind in (&#x27;int&#x27;, &#x27;float&#x27;):
+        nums = [float(v) for v in present]
+        col.low, col.high = min(nums), max(nums)
+        col.mean = statistics.fmean(nums)
+        col.median = statistics.median(nums)
+    return col
+
+
+def read_rows(path: Path) -&gt; tuple[list[str], list[Row]]:
+    with path.open(newline=&#x27;&#x27;, encoding=&#x27;utf-8&#x27;) as f:
+        reader = csv.DictReader(f)
+        if reader.fieldnames is None:
+            raise ValueError(&#x27;no header row&#x27;)
+        return list(reader.fieldnames), list(reader)
+
+
+def find_duplicates(data: Data) -&gt; list[tuple[str, str]]:
+    names = list(data)
+    return [(a, b)
+            for i, a in enumerate(names)
+            for b in names[i + 1:]
+            if data[a] == data[b]]
+
+
+def report(path: Path) -&gt; None:
+    names, rows = read_rows(path)
+    bad = sum(1 for r in rows
+              if None in r or None in r.values())
+    data = {n: [r.get(n) or &#x27;&#x27; for r in rows] for n in names}
+    print(f&#x27;File: {path.name}&#x27;)
+    print(f&#x27;Rows: {len(rows)}  Columns: {len(names)}&#x27;)
+    print(f&#x27;Malformed rows: {bad}&#x27;)
+    for n in names:
+        c = profile(n, data[n])
+        line = (f&#x27;- {c.name}: {c.kind}, missing={c.missing}, &#x27;
+                f&#x27;unique={c.unique}&#x27;)
+        if c.mean is not None:
+            line += (f&#x27;, min={c.low:g}, max={c.high:g}, &#x27;
+                     f&#x27;mean={c.mean:.2f}, median={c.median:g}&#x27;)
+        if c.unique &lt;= 1 and c.kind != &#x27;empty&#x27;:
+            line += &#x27;  [constant]&#x27;
+        print(line)
+    for a, b in find_duplicates(data):
+        print(f&#x27;Duplicate columns: {a} and {b}&#x27;)
+
+
+def main(argv: list[str]) -&gt; int:
+    if len(argv) != 2:
+        print(&#x27;Usage: python profiler.py &lt;file.csv&gt;&#x27;)
+        return 2
+    path = Path(argv[1])
+    try:
+        report(path)
+    except (OSError, ValueError) as error:
+        print(f&#x27;Could not profile {path}: {error}&#x27;)
+        return 1
+    return 0
+
+
+if __name__ == &#x27;__main__&#x27;:
+    sys.exit(main(sys.argv))
+</code></pre></div><div class="card" id="c-W02-S06"><div class="top"><h2>W02-S06</h2><button onclick="cp('k-W02-S06',this)">Copy code</button></div><pre><code id="k-W02-S06">age = 24              # int
+price = 32.5          # float
+city = &#x27;Karachi&#x27;      # str
+active = True         # bool
+missing = None        # no value at all
+print(f&#x27;{city}: {age} years, price {price:.1f}&#x27;)
+&#x27;24&#x27; == 24            # False: text is not a number</code></pre></div><div class="card" id="c-W02-S07"><div class="top"><h2>W02-S07</h2><button onclick="cp('k-W02-S07',this)">Copy code</button></div><pre><code id="k-W02-S07">raw = &#x27;  karachi &#x27;
+raw.strip().title()                 # &#x27;Karachi&#x27;
+&#x27;Lahore,Punjab&#x27;.split(&#x27;,&#x27;)          # [&#x27;Lahore&#x27;, &#x27;Punjab&#x27;]
+&#x27;2026-05-21&#x27;.split(&#x27;-&#x27;)             # [&#x27;2026&#x27;, &#x27;05&#x27;, &#x27;21&#x27;]
+&#x27;N/A&#x27;.lower() in {&#x27;n/a&#x27;, &#x27;?&#x27;, &#x27;&#x27;}   # True</code></pre></div><div class="card" id="c-W02-S08"><div class="top"><h2>W02-S08</h2><button onclick="cp('k-W02-S08',this)">Copy code</button></div><pre><code id="k-W02-S08">amounts = [1200, 450, 3000, 80, 950, 5000]
+amounts[0], amounts[-1]              # 1200, 5000
+amounts[1:4]                         # [450, 3000, 80]
+big = [a for a in amounts if a &gt; 1000]   # [1200, 3000, 5000]
+sorted(amounts, reverse=True)[:3]    # [5000, 3000, 1200]</code></pre></div><div class="card" id="c-W02-S09"><div class="top"><h2>W02-S09</h2><button onclick="cp('k-W02-S09',this)">Copy code</button></div><pre><code id="k-W02-S09">row = {&#x27;order_id&#x27;: 1001, &#x27;city&#x27;: &#x27;karachi&#x27;, &#x27;qty&#x27;: 2}
+row[&#x27;city&#x27;];  row.get(&#x27;price&#x27;, &#x27;missing&#x27;)
+cities = [&#x27;Karachi&#x27;, &#x27;karachi&#x27;, &#x27;KHI&#x27;, &#x27;Lahore&#x27;, &#x27;Karachi&#x27;]
+len(set(cities))                          # 4 spellings, 3 cities
+from collections import Counter
+Counter(c.strip().lower() for c in cities)
+# Counter({&#x27;karachi&#x27;: 3, &#x27;khi&#x27;: 1, &#x27;lahore&#x27;: 1})</code></pre></div><div class="card" id="c-W02-S10"><div class="top"><h2>W02-S10</h2><button onclick="cp('k-W02-S10',this)">Copy code</button></div><pre><code id="k-W02-S10">for i, a in enumerate(amounts, start=1):
+    label = &#x27;big&#x27; if a &gt; 1000 else &#x27;small&#x27;
+    print(i, a, label)
+
+names, ages = [&#x27;Ayesha&#x27;, &#x27;Bilal&#x27;], [21, 24]
+for n, a in zip(names, ages):
+    print(n, a)</code></pre></div><div class="card" id="c-W02-S11"><div class="top"><h2>W02-S11</h2><button onclick="cp('k-W02-S11',this)">Copy code</button></div><pre><code id="k-W02-S11">def average(values: list[float]) -&gt; float | None:
+    &quot;&quot;&quot;Mean of values, or None when there are none.&quot;&quot;&quot;
+    if not values:
+        return None
+    return sum(values) / len(values)</code></pre></div><div class="card" id="c-W02-S12"><div class="top"><h2>W02-S12</h2><button onclick="cp('k-W02-S12',this)">Copy code</button></div><pre><code id="k-W02-S12">assert average([2, 4]) == 3
+assert average([]) is None
+assert is_missing(&#x27;N/A&#x27;) and is_missing(&#x27;&#x27;)
+assert not is_missing(&#x27;0&#x27;)    # zero is a value, not missing</code></pre></div><div class="card" id="c-W02-S15"><div class="top"><h2>W02-S15</h2><button onclick="cp('k-W02-S15',this)">Copy code</button></div><pre><code id="k-W02-S15">import csv
+from pathlib import Path
+
+path = Path(&#x27;orders.csv&#x27;)
+with path.open(newline=&#x27;&#x27;, encoding=&#x27;utf-8&#x27;) as f:
+    rows = list(csv.DictReader(f))
+print(len(rows), list(rows[0]))
+print(repr(rows[0][&#x27;unit_price&#x27;]))   # &#x27;3450&#x27;: text</code></pre></div><div class="card" id="c-W02-S16"><div class="top"><h2>W02-S16</h2><button onclick="cp('k-W02-S16',this)">Copy code</button></div><pre><code id="k-W02-S16">good, bad = [], []
+for row in rows:
+    try:
+        good.append(float(row[&#x27;unit_price&#x27;]))
+    except (ValueError, TypeError):
+        bad.append(row[&#x27;order_id&#x27;])
+print(len(good), &#x27;ok;&#x27;, len(bad), &#x27;rejected:&#x27;, bad)</code></pre></div><div class="card" id="c-W02-S17"><div class="top"><h2>W02-S17</h2><button onclick="cp('k-W02-S17',this)">Copy code</button></div><pre><code id="k-W02-S17">amounts = [1200, 450, 3000, 80, 950, 5000]</code></pre></div><div class="card" id="c-W02-S25"><div class="top"><h2>W02-S25</h2><button onclick="cp('k-W02-S25',this)">Copy code</button></div><pre><code id="k-W02-S25">git init
+git add profiler.py
+git commit -m &quot;Add CSV profiler for orders data&quot;
+git remote add origin &lt;your-repo-url&gt;
+git push -u origin main</code></pre></div><script>function cp(id,btn){var t=document.getElementById(id).textContent;var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}document.body.removeChild(a);
+function done(g){btn.textContent=g?'Copied':'Select the code and copy';setTimeout(function(){btn.textContent='Copy code';},1800);}
+if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t).then(function(){done(true);},function(){done(false);});}else{done(ok);}}
+function go(){var h=location.hash.replace('#','');if(!h)return;var e=document.getElementById('c-'+h);if(e){e.classList.add('hl');e.scrollIntoView();}}
+window.addEventListener('load',go);window.addEventListener('hashchange',go);</script></body></html>

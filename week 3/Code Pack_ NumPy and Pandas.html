@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Code Pack: NumPy and Pandas</title><style>:root{--bg:#f7f5ef;--ink:#1b2a41;--mut:#5f6b7a;--card:#ffffff;--bd:#e0dcd0;--ac:#d9661f;--code:#1b2a41;--codefg:#f7f5ef;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}}
+:root[data-theme="dark"]{--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--ink);font-family:Helvetica,Arial,sans-serif;padding:24px;line-height:1.5;max-width:980px}
+h1{font-family:Georgia,serif;margin:0 0 6px}h2{font-size:18px;margin:0}.mut{color:var(--mut)}.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin:16px 0}.card.hl{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 16px;font-size:15px;cursor:pointer}
+pre{margin:0;background:var(--code);color:var(--codefg);border-radius:10px;padding:14px;overflow-x:auto;font-size:14px;line-height:1.45}code{font-family:'Courier New',monospace}</style></head><body><h1>Code Pack: NumPy and Pandas</h1><p class="mut">Every code sample from the slides, in order, with the indentation exactly as Python needs it. Press Copy code, then paste into a Colab cell. The first card is the complete file for the lab. Each card is labelled with its slide ID (for example W03-S06).</p><div class="card" id="c-file-week3.py"><div class="top"><h2>Full file: week3.py</h2><button onclick="cp('k-file-week3.py',this)">Copy code</button></div><pre><code id="k-file-week3.py">from __future__ import annotations
+
+from pathlib import Path
+
+import pandas as pd
+
+
+def load_sales(path: Path) -&gt; pd.DataFrame:
+    df = pd.read_csv(path)
+    df[&#x27;order_date&#x27;] = pd.to_datetime(
+        df[&#x27;order_date&#x27;], errors=&#x27;coerce&#x27;)
+    bad = int(df[&#x27;order_date&#x27;].isna().sum())
+    print(&#x27;Unparseable dates:&#x27;, bad)
+    df[&#x27;region&#x27;] = df[&#x27;region&#x27;].str.strip().fillna(&#x27;Unknown&#x27;)
+    df[&#x27;discount&#x27;] = df[&#x27;discount&#x27;].fillna(0)
+    df[&#x27;revenue&#x27;] = (df[&#x27;quantity&#x27;] * df[&#x27;unit_price&#x27;]
+                     * (1 - df[&#x27;discount&#x27;]))
+    return df
+
+
+def inspect(df: pd.DataFrame) -&gt; None:
+    print(df.shape)
+    print(df.dtypes)
+    print(df.isna().sum())
+    nums = [&#x27;quantity&#x27;, &#x27;unit_price&#x27;, &#x27;discount&#x27;, &#x27;revenue&#x27;]
+    print(df[nums].describe().round(1))
+    print(&#x27;lines:&#x27;, len(df))
+    print(&#x27;orders:&#x27;, df[&#x27;order_id&#x27;].nunique())
+
+
+def revenue_by_category(df: pd.DataFrame) -&gt; pd.Series:
+    return (df.groupby(&#x27;category&#x27;)[&#x27;revenue&#x27;].sum()
+              .sort_values(ascending=False))
+
+
+def aov_by_region(df: pd.DataFrame) -&gt; pd.Series:
+    orders = df.groupby([&#x27;region&#x27;, &#x27;order_id&#x27;])[&#x27;revenue&#x27;].sum()
+    return (orders.groupby(&#x27;region&#x27;).mean()
+                  .sort_values(ascending=False))
+
+
+def monthly_units(df: pd.DataFrame) -&gt; pd.DataFrame:
+    d = df.dropna(subset=[&#x27;order_date&#x27;]).copy()
+    d[&#x27;month&#x27;] = d[&#x27;order_date&#x27;].dt.to_period(&#x27;M&#x27;)
+    return (d.groupby([&#x27;product&#x27;, &#x27;month&#x27;])[&#x27;quantity&#x27;]
+             .sum().unstack(&#x27;month&#x27;, fill_value=0))
+
+
+def declining(df: pd.DataFrame) -&gt; pd.Series:
+    # drop the last month: it is only half complete
+    m = monthly_units(df).iloc[:, :-1]
+    recent = m.iloc[:, -3:].mean(axis=1)
+    earlier = m.iloc[:, -6:-3].mean(axis=1)
+    change = (recent - earlier) / earlier.where(earlier &gt; 0)
+    return change.dropna().sort_values()
+
+
+def top_categories(df: pd.DataFrame, n: int = 3) -&gt; pd.Series:
+    t = df.groupby([&#x27;region&#x27;, &#x27;category&#x27;])[&#x27;revenue&#x27;].sum()
+    g = t.groupby(level=&#x27;region&#x27;, group_keys=False)
+    return g.nlargest(n)
+
+
+def main() -&gt; None:
+    df = load_sales(Path(&#x27;sales.csv&#x27;))
+    inspect(df)
+    cat = revenue_by_category(df)
+    assert abs(cat.sum() - df[&#x27;revenue&#x27;].sum()) &lt; 1e-6
+    print(cat.round(0))
+    print(aov_by_region(df).round(0))
+    print(declining(df).round(2).head(3))
+    print(top_categories(df))
+
+
+if __name__ == &#x27;__main__&#x27;:
+    main()
+</code></pre></div><div class="card" id="c-W03-S04"><div class="top"><h2>W03-S04</h2><button onclick="cp('k-W03-S04',this)">Copy code</button></div><pre><code id="k-W03-S04">import time
+import numpy as np
+
+n = 1_000_000
+values = list(range(n))
+t = time.perf_counter(); [x + 1 for x in values]
+loop_s = time.perf_counter() - t
+
+arr = np.arange(n)
+t = time.perf_counter(); arr + 1
+numpy_s = time.perf_counter() - t
+print(loop_s / numpy_s)</code></pre></div><div class="card" id="c-W03-S05"><div class="top"><h2>W03-S05</h2><button onclick="cp('k-W03-S05',this)">Copy code</button></div><pre><code id="k-W03-S05">a = np.array([[1, 2, 3], [4, 5, 6]])
+a.shape, a.ndim, a.dtype     # (2, 3) 2 int64
+a[0, 1]                      # 2   row 0, column 1
+a[:, 1]                      # [2 5]   every row, column 1
+a[1, :]                      # [4 5 6]
+a.reshape(3, 2)              # same six numbers, new shape</code></pre></div><div class="card" id="c-W03-S07"><div class="top"><h2>W03-S07</h2><button onclick="cp('k-W03-S07',this)">Copy code</button></div><pre><code id="k-W03-S07">prices = np.array([800, 1200, 450, 3000])
+prices &gt; 1000                   # [False  True False  True]
+prices[prices &gt; 1000]           # [1200 3000]
+prices * 1.17                   # tax on every price
+prices - prices.mean()          # distance from the average
+np.where(prices &gt; 1000, &#x27;big&#x27;, &#x27;small&#x27;)</code></pre></div><div class="card" id="c-W03-S08"><div class="top"><h2>W03-S08</h2><button onclick="cp('k-W03-S08',this)">Copy code</button></div><pre><code id="k-W03-S08">rng = np.random.default_rng(42)
+sales = rng.normal(loc=5000, scale=1500, size=1000)
+sales.mean(), sales.std()
+np.percentile(sales, [25, 50, 75])
+(sales &gt; 8000).mean()           # share above 8000</code></pre></div><div class="card" id="c-W03-S09"><div class="top"><h2>W03-S09</h2><button onclick="cp('k-W03-S09',this)">Copy code</button></div><pre><code id="k-W03-S09">df = pd.DataFrame({&#x27;city&#x27;: [&#x27;Karachi&#x27;, &#x27;Lahore&#x27;],
+                   &#x27;orders&#x27;: [120, 80]})
+df[&#x27;orders&#x27;] / df[&#x27;orders&#x27;].sum()    # share of orders</code></pre></div><div class="card" id="c-W03-S10"><div class="top"><h2>W03-S10</h2><button onclick="cp('k-W03-S10',this)">Copy code</button></div><pre><code id="k-W03-S10">df = pd.read_csv(&#x27;sales.csv&#x27;)</code></pre></div><div class="card" id="c-W03-S11"><div class="top"><h2>W03-S11</h2><button onclick="cp('k-W03-S11',this)">Copy code</button></div><pre><code id="k-W03-S11">df[&#x27;order_date&#x27;] = pd.to_datetime(df[&#x27;order_date&#x27;],
+                                  errors=&#x27;coerce&#x27;)
+df[&#x27;order_date&#x27;].isna().sum()          # 3 could not be parsed
+df[&#x27;month&#x27;] = df[&#x27;order_date&#x27;].dt.to_period(&#x27;M&#x27;)
+df[&#x27;weekday&#x27;] = df[&#x27;order_date&#x27;].dt.day_name()</code></pre></div><div class="card" id="c-W03-S12"><div class="top"><h2>W03-S12</h2><button onclick="cp('k-W03-S12',this)">Copy code</button></div><pre><code id="k-W03-S12">df[&#x27;region&#x27;] = df[&#x27;region&#x27;].str.strip().fillna(&#x27;Unknown&#x27;)
+df[&#x27;category&#x27;].value_counts()
+df[&#x27;product&#x27;].str.contains(&#x27;Pro&#x27;).sum()
+df[&#x27;discount&#x27;] = df[&#x27;discount&#x27;].fillna(0)</code></pre></div><div class="card" id="c-W03-S14"><div class="top"><h2>W03-S14</h2><button onclick="cp('k-W03-S14',this)">Copy code</button></div><pre><code id="k-W03-S14">big = df[df[&#x27;quantity&#x27;] &gt;= 3]
+home_khi = df[(df[&#x27;region&#x27;] == &#x27;Karachi&#x27;)
+              &amp; (df[&#x27;category&#x27;] == &#x27;Home&#x27;)]
+df[df[&#x27;product&#x27;].isin([&#x27;Blender&#x27;, &#x27;Kurta&#x27;])]
+df[df[&#x27;unit_price&#x27;].between(1000, 3000)]
+df.sort_values([&#x27;category&#x27;, &#x27;unit_price&#x27;],
+               ascending=[True, False]).head()</code></pre></div><div class="card" id="c-W03-S15"><div class="top"><h2>W03-S15</h2><button onclick="cp('k-W03-S15',this)">Copy code</button></div><pre><code id="k-W03-S15">df[&#x27;revenue&#x27;] = (df[&#x27;quantity&#x27;] * df[&#x27;unit_price&#x27;]
+                 * (1 - df[&#x27;discount&#x27;]))
+df[&#x27;size&#x27;] = np.where(df[&#x27;revenue&#x27;] &gt; 5000, &#x27;large&#x27;, &#x27;small&#x27;)
+df[&#x27;band&#x27;] = pd.cut(df[&#x27;unit_price&#x27;], [0, 1000, 3000, 10000],
+                    labels=[&#x27;low&#x27;, &#x27;mid&#x27;, &#x27;high&#x27;])</code></pre></div><div class="card" id="c-W03-S16"><div class="top"><h2>W03-S16</h2><button onclick="cp('k-W03-S16',this)">Copy code</button></div><pre><code id="k-W03-S16">len(df)                          # lines
+df[&#x27;order_id&#x27;].nunique()         # orders
+df[&#x27;customer_id&#x27;].nunique()      # customers</code></pre></div><div class="card" id="c-W03-S17"><div class="top"><h2>W03-S17</h2><button onclick="cp('k-W03-S17',this)">Copy code</button></div><pre><code id="k-W03-S17">df.groupby(&#x27;category&#x27;)[&#x27;revenue&#x27;].sum()
+df.groupby(&#x27;region&#x27;).agg(lines=(&#x27;revenue&#x27;, &#x27;size&#x27;),
+                         revenue=(&#x27;revenue&#x27;, &#x27;sum&#x27;),
+                         avg_line=(&#x27;revenue&#x27;, &#x27;mean&#x27;))</code></pre></div><div class="card" id="c-W03-S18"><div class="top"><h2>W03-S18</h2><button onclick="cp('k-W03-S18',this)">Copy code</button></div><pre><code id="k-W03-S18">pd.pivot_table(df, index=&#x27;region&#x27;, columns=&#x27;category&#x27;,
+               values=&#x27;revenue&#x27;, aggfunc=&#x27;sum&#x27;,
+               fill_value=0).round(0)
+pd.crosstab(df[&#x27;region&#x27;], df[&#x27;category&#x27;])   # counts of lines</code></pre></div><div class="card" id="c-W03-S19"><div class="top"><h2>W03-S19</h2><button onclick="cp('k-W03-S19',this)">Copy code</button></div><pre><code id="k-W03-S19"># harder to read
+t = df[df[&#x27;region&#x27;] != &#x27;Unknown&#x27;]
+t = t.groupby(&#x27;category&#x27;)[&#x27;revenue&#x27;].sum()
+t = t.sort_values(ascending=False).head(3)
+
+# method chain: one idea per line
+top3 = (df[df[&#x27;region&#x27;] != &#x27;Unknown&#x27;]
+        .groupby(&#x27;category&#x27;)[&#x27;revenue&#x27;].sum()
+        .sort_values(ascending=False)
+        .head(3))</code></pre></div><div class="card" id="c-W03-S26"><div class="top"><h2>W03-S26</h2><button onclick="cp('k-W03-S26',this)">Copy code</button></div><pre><code id="k-W03-S26">assert abs(cat.sum() - df[&#x27;revenue&#x27;].sum()) &lt; 1e-6
+df[df[&#x27;order_id&#x27;] == 5001][[&#x27;product&#x27;, &#x27;quantity&#x27;,
+                            &#x27;unit_price&#x27;, &#x27;discount&#x27;, &#x27;revenue&#x27;]]</code></pre></div><script>function cp(id,btn){var t=document.getElementById(id).textContent;var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}document.body.removeChild(a);
+function done(g){btn.textContent=g?'Copied':'Select the code and copy';setTimeout(function(){btn.textContent='Copy code';},1800);}
+if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t).then(function(){done(true);},function(){done(false);});}else{done(ok);}}
+function go(){var h=location.hash.replace('#','');if(!h)return;var e=document.getElementById('c-'+h);if(e){e.classList.add('hl');e.scrollIntoView();}}
+window.addEventListener('load',go);window.addEventListener('hashchange',go);</script></body></html>
