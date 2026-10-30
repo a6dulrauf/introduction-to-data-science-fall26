@@ -1,0 +1,620 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Week 3 data: sales.csv</title>
+<style>:root{--bg:#f7f5ef;--ink:#1b2a41;--mut:#5f6b7a;--card:#ffffff;--bd:#e0dcd0;--ac:#d9661f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b}}
+:root[data-theme="dark"]{--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--ink);font-family:Helvetica,Arial,sans-serif;padding:24px;line-height:1.5;max-width:980px}
+h1{font-family:Georgia,serif;margin:0 0 8px}.mut{color:var(--mut)}.box{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 18px;margin:16px 0}
+code,textarea{font-family:'Courier New',monospace;font-size:13px}textarea{width:100%;height:260px;box-sizing:border-box;background:var(--card);color:var(--ink);border:1px solid var(--bd);border-radius:8px;padding:10px}
+button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-size:16px;cursor:pointer;margin:8px 0}.wrap{overflow-x:auto}table{border-collapse:collapse;font-size:13px}th,td{padding:4px 10px;border-bottom:1px solid var(--bd);white-space:nowrap;text-align:left}th{color:var(--ac)}pre{margin:6px 0;overflow-x:auto}</style></head>
+<body><h1>Week 3 data: sales.csv</h1><p class="mut">601 fictional order lines (282 orders) for the Pandas lab. One row is one order line, so order_id repeats. Fictional data.</p>
+<div class="box"><b>Load it in Google Colab (2 steps)</b><ol><li>Press the button below to copy the data.</li><li>In a Colab cell, type the first line exactly, paste the data under it, and run the cell:<pre><code>%%writefile sales.csv
+(paste here)</code></pre></li></ol>Then check with <code>!head -3 sales.csv</code>. </div>
+<button id="b">Copy data</button> <span id="m" class="mut"></span>
+<textarea id="t" readonly>order_id,order_date,customer_id,region,category,product,quantity,unit_price,discount
+5001,2026-03-24,K102,Lahore,Electronics,Earbuds Pro,2,4860,0
+5001,2026-03-24,K102,Lahore,Fashion,Sneakers,1,7000,0.1
+5001,2026-03-24,K102,Lahore,Home,Cookware Set,1,8000,0.05
+5001,2026-03-24,K102,Lahore,Fashion,Cap,1,900,0
+5002,2026-05-22,K016,Peshawar,Electronics,Smart Lamp,1,2800,0.1
+5002,2026-05-22,K016,Peshawar,Grocery,Biscuits,5,120,0
+5002,2026-05-22,K016,Peshawar,Grocery,Biscuits,1,120,0.1
+5003,2026-08-08,K075,Lahore,Home,Blender,1,6500,0.1
+5003,2026-08-08,K075,Lahore,Fashion,Sneakers,3,7000,0
+5004,2026-01-27,K096,Lahore,Grocery,Rice 5kg,1,1800,0.1
+5005,2026-01-16,K128,Lahore,Grocery,Rice 5kg,3,1800,0.05
+5005,2026-01-16,K128,Lahore,Grocery,Rice 5kg,5,1800,
+5005,2026-01-16,K128,Lahore,Home,Bedsheet,1,2200,
+5005,2026-01-16,K128,Lahore,Electronics,Earbuds Pro,1,4500,0.1
+5006,2026-05-07,K115,Islamabad,Grocery,Cooking Oil,1,1200,0
+5006,2026-05-07,K115,Islamabad,Grocery,Rice 5kg,2,1800,0
+5007,2026-02-08,K108,Peshawar,Grocery,Biscuits,1,120,0.1
+5008,2026-05-27,K088,Islamabad,Fashion,Sneakers,2,7000,0.1
+5008,2026-05-27,K088,Islamabad,Grocery,Tea Pack,1,650,0
+5008,2026-05-27,K088,Islamabad,Grocery,Biscuits,5,120,0
+5008,2026-05-27,K088,Islamabad,Electronics,Power Bank,3,3200,0
+5009,2026-06-15,K073,Peshawar,Home,Bedsheet,3,2200,0
+5009,2026-06-15,K073,Peshawar,Electronics,Earbuds Pro,2,5400,0
+5009,2026-06-15,K073,Peshawar,Electronics,Smart Lamp,1,2800,0.05
+5009,2026-06-15,K073,Peshawar,Electronics,Power Bank,1,3200,0
+5010,2026-07-09,K102,Lahore,Grocery,Biscuits,5,120,0
+5010,2026-07-09,K102,Lahore,Home,Blender,2,6500,0.1
+5011,2026-03-13,K111,Lahore,Home,Bedsheet,2,2200,0
+5011,2026-03-13,K111,Lahore,Grocery,Cooking Oil,5,1200,0
+5011,2026-03-13,K111,Lahore,Electronics,Smart Lamp,1,2800,0
+5012,2026-03-01,K004,Lahore,Grocery,Tea Pack,2,650,0
+5012,2026-03-01,K004,Lahore,Home,Bedsheet,1,2200,0.05
+5013,2026-05-17,K145,Islamabad,Grocery,Biscuits,1,120,0.05
+5013,2026-05-17,K145,Islamabad,Grocery,Biscuits,5,120,0.05
+5014,2026-04-13,K027,Peshawar,Grocery,Cooking Oil,1,1200,0
+5014,2026-04-13,K027,Peshawar,Electronics,Power Bank,1,3200,0.05
+5015,2026-02-11,K088,Karachi,Electronics,Earbuds Pro,1,4680,0.1
+5015,2026-02-11,K088,Karachi,Electronics,Smart Lamp,1,2800,0
+5015,2026-02-11,K088,Karachi,Grocery,Cooking Oil,1,1200,0
+5016,2026-06-07,K039,Peshawar,Electronics,Smart Lamp,1,2800,0.1
+5016,2026-06-07,K039,Peshawar,Home,Bedsheet,1,2200,0
+5016,2026-06-07,K039,Peshawar,Grocery,Tea Pack,5,650,0.05
+5016,2026-06-07,K039,Peshawar,Fashion,Cap,1,900,0
+5017,2026-01-27,K068,Islamabad,Grocery,Tea Pack,2,650,0.1
+5017,2026-01-27,K068,Islamabad,Electronics,Earbuds Pro,2,4500,
+5018,2026-02-07,K136,Karachi,Grocery,Biscuits,1,120,0
+5018,2026-02-07,K136,Karachi,Grocery,Rice 5kg,2,1800,
+5019,2026-07-17,K137,Lahore,Grocery,Tea Pack,3,650,0
+5019,2026-07-17,K137,Lahore,Grocery,Cooking Oil,2,1200,0
+5019,2026-07-17,K137,Lahore,Grocery,Tea Pack,2,650,0
+5020,2026-05-13,K092,Peshawar,Electronics,Earbuds Pro,1,5220,0
+5020,2026-05-13,K092,Peshawar,Grocery,Rice 5kg,2,1800,0.1
+5020,2026-05-13,K092,Peshawar,Grocery,Biscuits,5,120,0
+5020,2026-05-13,K092,Peshawar,Grocery,Biscuits,3,120,0
+5021,2026-02-26,K059,Karachi,Home,Blender,1,6500,0.05
+5021,2026-02-26,K059,Karachi,Grocery,Cooking Oil,1,1200,0.05
+5022,2026-06-17,K022,Islamabad,Electronics,Smart Lamp,2,2800,0
+5022,2026-06-17,K022,Islamabad,Fashion,Cap,1,900,0.05
+5022,2026-06-17,K022,Islamabad,Grocery,Tea Pack,3,650,0
+5022,2026-06-17,K022,Islamabad,Grocery,Tea Pack,5,650,0.05
+5023,2026-04-13,K041,Karachi,Grocery,Biscuits,1,120,0
+5024,2026-06-01,K038,Peshawar,Grocery,Tea Pack,5,650,
+5024,2026-06-01,K038,Peshawar,Electronics,Smart Lamp,2,2800,0
+5024,2026-06-01,K038,Peshawar,Electronics,Earbuds Pro,3,5400,0
+5025,2026-05-15,K112,Lahore,Grocery,Tea Pack,2,650,0
+5026,2026-03-06,K075,Lahore,Home,Cookware Set,2,8000,0
+5026,2026-03-06,K075,Lahore,Home,Bedsheet,2,2200,0
+5026,2026-03-06,K075,Lahore,Electronics,Earbuds Pro,3,4860,0
+5027,2026-04-28,K129,Peshawar,Grocery,Rice 5kg,1,1800,0.05
+5028,2026-07-18,K002,Lahore,Home,Cookware Set,2,8000,0.1
+5029,2026-07-05,K143,Karachi,Fashion,Sneakers,2,7000,0.1
+5030,2026-05-23,K028,Peshawar,Electronics,Power Bank,1,3200,0
+5030,2026-05-23,K028,Peshawar,Electronics,Earbuds Pro,1,5220,0.1
+5030,2026-05-23,K028,Peshawar,Grocery,Rice 5kg,1,1800,
+5031,2026-04-24,K130,Islamabad,Grocery,Rice 5kg,3,1800,0.05
+5031,2026-04-24,K130,Islamabad,Grocery,Rice 5kg,5,1800,0.1
+5031,2026-04-24,K130,Islamabad,Grocery,Biscuits,3,120,0.1
+5032,2026-02-21,K036,Peshawar,Electronics,Power Bank,2,3200,0
+5032,2026-02-21,K036,Peshawar,Electronics,Earbuds Pro,1,4680,0.05
+5033,2026-01-19,K078,Lahore,Grocery,Biscuits,2,120,0
+5034,2026-02-06,K036,Islamabad,Home,Blender,1,6500,0.05
+5034,2026-02-06,K036,Islamabad,Grocery,Biscuits,2,120,0
+5035,2026-02-11,K132,Peshawar,Fashion,Kurta,1,3500,0
+5035,2026-02-11,K132,Peshawar,Fashion,Kurta,3,3500,0
+5036,2026-01-05,K142,Islamabad,Fashion,Cap,1,900,0.05
+5036,2026-01-05,K142,Islamabad,Fashion,Kurta,2,3500,
+5037,2026-05-12,K029,Karachi,Grocery,Biscuits,1,120,0
+5038,2026-03-09,K011,Islamabad,Home,Bedsheet,1,2200,0.05
+5039,2026-08-06,K104,Islamabad,Grocery,Rice 5kg,5,1800,0
+5040,2026-01-23,K015,Islamabad,Electronics,Smart Lamp,1,2800,0
+5040,2026-01-23,K015,Islamabad,Grocery,Biscuits,1,120,0
+5040,2026-01-23,K015,Islamabad,Electronics,Earbuds Pro,1,4500,0
+5040,2026-01-23,K015,Islamabad,Home,Cookware Set,1,8000,0.05
+5041,2026-01-03,K142,Islamabad,Grocery,Biscuits,3,120,0.1
+5041,2026-01-03,K142,Islamabad,Electronics,Power Bank,2,3200,0
+5042,2026-01-29,K068,Lahore,Electronics,Smart Lamp,1,2800,0
+5043,2026-05-16,K075,Lahore,Grocery,Rice 5kg,2,1800,0
+5043,2026-05-16,K075,Lahore,Fashion,Sneakers,1,7000,0
+5044,2026-01-10,K005,Karachi,Grocery,Rice 5kg,2,1800,0.1
+5044,2026-01-10,K005,Karachi,Grocery,Rice 5kg,5,1800,0
+5044,2026-02-30,K005,Karachi,Grocery,Cooking Oil,5,1200,0.05
+5044,2026-01-10,K005,Karachi,Grocery,Rice 5kg,5,1800,0.1
+5045,2026-03-20,K059,Lahore,Home,Blender,3,6500,0
+5045,2026-03-20,K059,Lahore,Fashion,Cap,1,900,0
+5046,2026-08-03,K004,Lahore,Grocery,Cooking Oil,3,1200,0.05
+5047,2026-02-11,K022,Karachi,Grocery,Tea Pack,3,650,0.1
+5047,2026-02-11,K022,Karachi,Home,Cookware Set,1,8000,0
+5047,2026-02-11,K022,Karachi,Grocery,Rice 5kg,2,1800,0
+5047,2026-02-11,K022,Karachi,Fashion,Cap,1,900,0
+5048,2026-03-26,K063,Islamabad,Grocery,Biscuits,3,120,0
+5049,2026-04-02,K001,Lahore,Fashion,Sneakers,2,7000,0
+5049,2026-04-02,K001,,Grocery,Rice 5kg,2,1800,0
+5050,2026-05-10,K024,Karachi,Grocery,Tea Pack,2,650,0.05
+5050,2026-05-10,K024,Karachi,Grocery,Cooking Oil,5,1200,
+5051,2026-03-18,K060,Islamabad,Grocery,Cooking Oil,2,1200,0.1
+5052,2026-04-10,K127,Islamabad,Home,Bedsheet,2,2200,
+5053,2026-01-12,K130,Peshawar,Grocery,Biscuits,1,120,0.1
+5054,2026-07-24,K022,Lahore,Electronics,Power Bank,3,3200,
+5055,2026-01-27,K116,Peshawar,Electronics,Earbuds Pro,1,4500,0.1
+5055,2026-01-27,K116,Peshawar,Grocery,Cooking Oil,5,1200,0
+5055,2026-01-27,K116,Peshawar,Electronics,Earbuds Pro,1,4500,0.1
+5056,2026-05-18,K135,Karachi,Grocery,Tea Pack,5,650,0
+5057,2026-07-27,K068,Karachi,Grocery,Tea Pack,2,650,0
+5058,2026-07-09,K127,Peshawar,Electronics,Smart Lamp,3,2800,0
+5058,2026-07-09,K127,Peshawar,Grocery,Tea Pack,2,650,0
+5059,2026-06-03,K085,Lahore,Grocery,Cooking Oil,3,1200,0.1
+5059,2026-06-03,K085,Lahore,Grocery,Rice 5kg,1,1800,0.05
+5060,2026-01-16,K069,Peshawar,Electronics,Power Bank,1,3200,0.05
+5060,2026-01-16,K069,Peshawar,Home,Bedsheet,2,2200,0
+5060,2026-01-16,K069,Peshawar,Grocery,Rice 5kg,5,1800,0
+5060,2026-01-16,K069,Peshawar,Grocery,Biscuits,2,120,0
+5061,2026-01-22,K005,Peshawar,Fashion,Cap,2,900,0.05
+5061,2026-01-22,K005,Peshawar,Grocery,Biscuits,5,120,0
+5062,2026-02-23,K149,Karachi,Electronics,Smart Lamp,2,2800,0
+5063,2026-04-03,K131,Lahore,Grocery,Biscuits,3,120,0
+5063,2026-04-03,K131,Lahore,Grocery,Rice 5kg,5,1800,0.05
+5064,2026-01-07,K001,Lahore,Grocery,Cooking Oil,5,1200,0
+5064,2026-01-07,K001,Lahore,Grocery,Cooking Oil,5,1200,0
+5065,2026-04-07,K031,Islamabad,Electronics,Earbuds Pro,1,5040,0.05
+5065,2026-04-07,K031,Islamabad,Electronics,Smart Lamp,1,2800,0
+5066,2026-07-09,K065,Islamabad,Electronics,Power Bank,2,3200,0.1
+5066,2026-07-09,K065,Islamabad,Electronics,Smart Lamp,2,2800,0
+5067,2026-08-07,K072,Karachi,Electronics,Power Bank,3,3200,0
+5068,2026-06-12,K064,Lahore,Fashion,Sneakers,1,7000,0
+5068,2026-06-12,K064,Lahore,Grocery,Tea Pack,5,650,0
+5069,2026-07-27,K142,Peshawar,Home,Cookware Set,1,8000,0
+5069,2026-07-27,K142,Peshawar,Grocery,Biscuits,5,120,0.05
+5069,2026-07-27,K142,Peshawar,Grocery,Cooking Oil,2,1200,0
+5070,2026-05-05,K141,Karachi,Home,Blender,2,6500,0
+5071,2026-03-14,K066,Islamabad,Grocery,Tea Pack,3,650,0.05
+5071,2026-03-14,K066,Islamabad,Grocery,Cooking Oil,3,1200,0.05
+5071,2026-03-14,K066,Islamabad,Grocery,Rice 5kg,5,1800,0
+5071,2026-03-14,K066,Islamabad,Home,Blender,1,6500,0
+5072,2026-02-23,K141,Peshawar,Grocery,Rice 5kg,3,1800,0.05
+5073,2026-04-20,K141,Lahore,Home,Cookware Set,1,8000,0
+5074,2026-05-23,K082,Karachi,Fashion,Sneakers,2,7000,0
+5075,2026-01-06,K099,Peshawar,Grocery,Tea Pack,2,650,0.05
+5075,2026-01-06,K099,Peshawar,Home,Cookware Set,1,8000,0.05
+5076,2026-03-13,K033,Islamabad,Grocery,Rice 5kg,2,1800,0
+5076,2026-03-13,K033,Islamabad,Home,Bedsheet,1,2200,0.05
+5076,2026-03-13,K033,Islamabad,Fashion,Cap,2,900,0.05
+5076,2026-03-13,K033,Islamabad,Grocery,Biscuits,1,120,0
+5077,2026-01-09,K122,Peshawar,Grocery,Rice 5kg,1,1800,0.05
+5077,2026-01-09,K122,Peshawar,Grocery,Biscuits,5,120,0.05
+5077,2026-01-09,K122,Peshawar,Home,Cookware Set,1,8000,0
+5078,2026-02-09,K134,Lahore,Electronics,Power Bank,3,3200,
+5078,2026-02-09,K134,Lahore,Electronics,Earbuds Pro,1,4680,0
+5078,2026-02-09,K134,Lahore,Grocery,Tea Pack,2,650,0.1
+5078,2026-02-09,K134,Lahore,Grocery,Biscuits,3,120,0
+5079,2026-06-10,K136,Islamabad,Fashion,Sneakers,1,7000,0
+5079,2026-06-10,K136,Islamabad,Electronics,Smart Lamp,2,2800,0.1
+5079,2026-06-10,K136,Islamabad,Electronics,Smart Lamp,1,2800,0
+5079,2026-06-10,K136,Islamabad,Grocery,Tea Pack,1,650,
+5080,2026-05-18,K118,Islamabad,Grocery,Biscuits,2,120,0.05
+5080,2026-05-18,K118,Islamabad,Grocery,Rice 5kg,2,1800,0
+5081,2026-04-16,K015,Islamabad,Home,Blender,3,6500,0.05
+5082,2026-01-21,K059,Islamabad,Fashion,Cap,1,900,0
+5082,2026-01-21,K059,Islamabad,Grocery,Rice 5kg,3,1800,0.05
+5082,2026-01-21,K059,Islamabad,Fashion,Kurta,2,3500,0
+5082,2026-01-21,K059,Islamabad,Electronics,Earbuds Pro,1,4500,0.1
+5083,2026-01-18,K127,Lahore,Home,Bedsheet,1,2200,0
+5084,2026-04-30,K068,Lahore,Electronics,Smart Lamp,2,2800,0.05
+5084,2026-04-30,K068,Lahore,Grocery,Cooking Oil,2,1200,0.05
+5085,2026-04-17,K038,Karachi,Electronics,Earbuds Pro,1,5040,0.1
+5085,2026-04-17,K038,Karachi,Electronics,Smart Lamp,1,2800,0
+5086,2026-02-17,K116,Peshawar,Grocery,Biscuits,1,120,0
+5086,2026-02-17,K116,Peshawar,Grocery,Biscuits,3,120,0
+5086,2026-02-17,K116,Peshawar,Home,Blender,2,6500,0.05
+5086,2026-02-17,K116,Peshawar,Electronics,Earbuds Pro,3,4680,0.05
+5087,2026-08-03,K085,Islamabad,Home,Cookware Set,1,8000,0
+5087,2026-08-03,K085,Islamabad,Fashion,Kurta,1,3500,0.05
+5088,2026-08-15,K144,Karachi,Fashion,Cap,1,900,0.05
+5089,2026-01-23,K122,Karachi,Fashion,Sneakers,2,7000,0
+5090,2026-03-24,K122,Islamabad,Grocery,Cooking Oil,2,1200,0.05
+5091,2026-01-11,K009,,Electronics,Earbuds Pro,1,4500,0
+5091,2026-01-11,K009,Peshawar,Home,Blender,1,6500,0.1
+5092,2026-03-28,K070,Islamabad,Grocery,Biscuits,1,120,0
+5092,2026-03-28,K070,Islamabad,Grocery,Tea Pack,3,650,0
+5093,2026-03-18,K017,Karachi,Grocery,Tea Pack,1,650,0.05
+5094,2026-07-03,K099,Peshawar,Grocery,Biscuits,5,120,0
+5094,2026-07-03,K099,Peshawar,Grocery,Biscuits,2,120,0
+5095,2026-07-25,K039,Islamabad,Home,Bedsheet,1,2200,
+5095,2026-07-25,K039,Islamabad,Fashion,Sneakers,2,7000,0
+5095,2026-07-25,K039,Islamabad,Grocery,Rice 5kg,5,1800,0
+5096,2026-03-05,K017,Peshawar,Electronics,Earbuds Pro,2,4860,0.1
+5096,2026-03-05,K017,Peshawar,Fashion,Kurta,2,3500,0
+5096,2026-03-05,K017,Peshawar,Grocery,Biscuits,3,120,0.1
+5096,2026-03-05,K017,Peshawar,Electronics,Power Bank,1,3200,0.05
+5097,2026-05-08,K045,Peshawar,Electronics,Smart Lamp,2,2800,0.1
+5098,2026-06-22,K138,Lahore,Grocery,Tea Pack,3,650,0
+5098,2026-06-22,K138,Lahore,Home,Blender,1,6500,0
+5098,2026-06-22,K138,Lahore,Electronics,Smart Lamp,1,2800,
+5098,2026-06-22,K138,Lahore,Fashion,Sneakers,1,7000,0
+5099,2026-03-02,K073,Lahore,Home,Blender,1,6500,0.05
+5099,2026-03-02,K073,Lahore,Home,Cookware Set,1,8000,0.1
+5099,2026-03-02,K073,Lahore,Grocery,Rice 5kg,1,1800,0.05
+5100,2026-01-10,K002,Karachi,Grocery,Biscuits,2,120,0.05
+5100,2026-01-10,K002,Karachi,Grocery,Biscuits,1,120,0
+5101,2026-03-01,K013,Karachi,Grocery,Cooking Oil,2,1200,0
+5102,2026-04-06,K115,Lahore,Home,Bedsheet,3,2200,0
+5102,2026-04-06,K115,Lahore,Electronics,Power Bank,2,3200,0.1
+5102,2026-04-06,K115,Lahore,Fashion,Sneakers,1,7000,0
+5103,2026-03-29,K012,Lahore,Grocery,Biscuits,1,120,0.1
+5104,2026-07-07,K003,Lahore,Fashion,Cap,1,900,0
+5104,2026-07-07,K003,Lahore,Grocery,Cooking Oil,1,1200,0
+5105,2026-01-09,K141,Peshawar,Electronics,Earbuds Pro,1,4500,0.05
+5105,2026-01-09,K141,Peshawar,Grocery,Cooking Oil,2,1200,0.1
+5106,2026-01-24,K102,Lahore,Home,Cookware Set,1,8000,0
+5106,2026-01-24,K102,Lahore,Fashion,Cap,1,900,0
+5106,2026-01-24,K102,Lahore,Grocery,Tea Pack,3,650,0.05
+5106,2026-01-24,K102,Lahore,Fashion,Cap,1,900,0
+5107,2026-04-11,K053,Peshawar,Fashion,Cap,1,900,0.05
+5108,2026-01-30,K104,Karachi,Grocery,Biscuits,5,120,0
+5108,2026-01-30,K104,Karachi,Electronics,Power Bank,1,3200,0.1
+5108,2026-01-30,K104,Karachi,Electronics,Power Bank,2,3200,0
+5109,2026-05-27,K130,Islamabad,Home,Blender,1,6500,0
+5110,2026-05-14,K018,Lahore,Fashion,Cap,1,900,0
+5111,2026-02-02,K124,Karachi,Electronics,Earbuds Pro,3,4680,0.05
+5111,2026-02-02,K124,Karachi,Electronics,Earbuds Pro,3,4680,0.1
+5112,2026-06-26,K057,Lahore,Fashion,Kurta,1,3500,0.05
+5112,2026-06-26,K057,Lahore,Electronics,Smart Lamp,1,2800,0
+5112,2026-06-26,K057,Lahore,Fashion,Kurta,2,3500,0
+5113,2026-04-09,K032,Islamabad,Home,Cookware Set,3,8000,0
+5114,2026-01-11,K083,Karachi,Fashion,Sneakers,2,7000,0.1
+5115,2026-08-06,K108,Islamabad,Grocery,Cooking Oil,5,1200,0.05
+5115,2026-08-06,K108,Islamabad,Grocery,Cooking Oil,5,1200,0.1
+5116,2026-04-23,K006,Lahore,Grocery,Cooking Oil,5,1200,0.05
+5117,2026-03-02,K118,Peshawar,Grocery,Tea Pack,5,650,0
+5118,2026-01-18,K092,Lahore,Fashion,Kurta,2,3500,0.1
+5118,2026-01-18,K092,Lahore,Grocery,Rice 5kg,1,1800,0
+5119,15/13/2026,K022,Lahore,Home,Cookware Set,3,8000,0.1
+5119,2026-06-12,K022,Lahore,Electronics,Smart Lamp,2,2800,0.05
+5119,2026-06-12,K022,Lahore,Grocery,Cooking Oil,2,1200,0
+5119,2026-06-12,K022,Lahore,Grocery,Tea Pack,1,650,0
+5120,2026-02-03,K074,Peshawar,Grocery,Cooking Oil,2,1200,0
+5121,2026-08-02,K065,Islamabad,Fashion,Sneakers,2,7000,0
+5122,2026-07-28,K037,Peshawar,Grocery,Rice 5kg,5,1800,0
+5122,2026-07-28,K037,Peshawar,Grocery,Cooking Oil,2,1200,0
+5123,2026-04-06,K051,Karachi,Fashion,Cap,3,900,0
+5124,2026-06-23,K097,Islamabad,Grocery,Tea Pack,3,650,0
+5125,2026-07-16,K093,Karachi,Grocery,Rice 5kg,1,1800,0
+5125,2026-07-16,K093,Karachi,Grocery,Biscuits,5,120,0
+5126,2026-03-09,K095,Peshawar,Electronics,Smart Lamp,1,2800,0
+5126,2026-03-09,K095,Peshawar,Fashion,Cap,1,900,0.1
+5126,2026-03-09,K095,Peshawar,Grocery,Tea Pack,1,650,0
+5127,2026-07-29,K080,Islamabad,Grocery,Biscuits,3,120,0
+5127,2026-07-29,K080,Islamabad,Grocery,Tea Pack,2,650,0
+5127,2026-07-29,K080,Islamabad,Fashion,Kurta,3,3500,0.05
+5127,2026-07-29,K080,Islamabad,Grocery,Rice 5kg,3,1800,0
+5128,2026-02-03,K059,Peshawar,Grocery,Cooking Oil,1,1200,0
+5128,2026-02-03,K059,,Electronics,Earbuds Pro,1,4680,0
+5128,2026-02-03,K059,Peshawar,Electronics,Power Bank,1,3200,0.1
+5129,2026-02-27,K150,Peshawar,Grocery,Cooking Oil,2,1200,0
+5129,2026-02-27,K150,Peshawar,Grocery,Cooking Oil,5,1200,0
+5130,2026-02-04,K063,Karachi,Electronics,Smart Lamp,1,2800,0
+5130,2026-02-04,K063,Karachi,Grocery,Cooking Oil,3,1200,0.05
+5130,2026-02-04,K063,Karachi,Grocery,Tea Pack,1,650,0
+5130,2026-02-04,K063,Karachi,Grocery,Cooking Oil,3,1200,0.1
+5131,2026-06-15,K133,Peshawar,Fashion,Cap,1,900,0
+5131,2026-06-15,K133,Peshawar,Electronics,Power Bank,2,3200,0
+5131,2026-06-15,K133,Peshawar,Fashion,Kurta,1,3500,0
+5131,2026-06-15,K133,Peshawar,Electronics,Power Bank,1,3200,0
+5132,2026-06-06,K037,Lahore,Electronics,Smart Lamp,2,2800,0.1
+5132,2026-06-06,K037,Lahore,Grocery,Cooking Oil,5,1200,0.1
+5133,2026-02-14,K017,Islamabad,Grocery,Cooking Oil,5,1200,0.1
+5133,2026-02-14,K017,Islamabad,Electronics,Earbuds Pro,2,4680,0.05
+5134,2026-01-21,K045,Peshawar,Grocery,Biscuits,3,120,0
+5135,2026-06-14,K032,Karachi,Grocery,Biscuits,3,120,
+5135,2026-06-14,K032,Karachi,Electronics,Smart Lamp,2,2800,0.05
+5136,2026-06-25,K076,Islamabad,Grocery,Biscuits,2,120,0
+5136,2026-06-25,K076,Islamabad,Grocery,Biscuits,1,120,0
+5136,2026-06-25,K076,Islamabad,Electronics,Smart Lamp,1,2800,0
+5136,2026-06-25,K076,Islamabad,Grocery,Biscuits,3,120,0
+5137,2026-08-14,K085,Peshawar,Home,Bedsheet,3,2200,0.1
+5137,2026-08-14,K085,Peshawar,Grocery,Rice 5kg,1,1800,0
+5137,2026-08-14,K085,Peshawar,Grocery,Rice 5kg,2,1800,0.1
+5138,2026-08-15,K055,Islamabad,Grocery,Cooking Oil,1,1200,
+5138,2026-08-15,K055,Islamabad,Grocery,Biscuits,2,120,0
+5139,2026-01-07,K028,Karachi,Grocery,Biscuits,3,120,0
+5139,2026-01-07,K028,Karachi,Grocery,Cooking Oil,1,1200,0
+5139,2026-01-07,K028,Karachi,Electronics,Power Bank,3,3200,0
+5140,2026-06-28,K012,Karachi,Grocery,Tea Pack,3,650,0
+5141,2026-07-29,K099,Karachi,Home,Bedsheet,1,2200,0
+5142,2026-01-09,K023,Karachi,Grocery,Cooking Oil,5,1200,0
+5142,2026-01-09,K023,Karachi,Electronics,Power Bank,3,3200,0
+5142,2026-01-09,K023,Karachi,Home,Bedsheet,1,2200,0.05
+5142,2026-01-09,K023,Karachi,Home,Cookware Set,1,8000,0
+5143,2026-03-14,K095,Karachi,Grocery,Tea Pack,5,650,0
+5143,2026-03-14,K095,Karachi,Grocery,Cooking Oil,1,1200,0.05
+5144,2026-01-08,K133,Peshawar,Fashion,Kurta,3,3500,0
+5145,2026-05-18,K024,Lahore,Grocery,Tea Pack,2,650,0.05
+5145,2026-05-18,K024,Lahore,Electronics,Earbuds Pro,1,5220,
+5145,2026-05-18,K024,Lahore,Grocery,Tea Pack,1,650,0
+5146,2026-03-31,K025,Peshawar,Grocery,Cooking Oil,2,1200,0.05
+5146,2026-03-31,K025,Peshawar,Grocery,Cooking Oil,3,1200,0.1
+5147,2026-02-10,K055,Islamabad,Home,Cookware Set,1,8000,0
+5147,2026-02-10,K055,Islamabad,Grocery,Biscuits,1,120,
+5147,2026-02-10,K055,Islamabad,Grocery,Tea Pack,1,650,0
+5147,2026-02-10,K055,Islamabad,Fashion,Kurta,2,3500,0.05
+5148,2026-07-10,K109,Karachi,Electronics,Power Bank,1,3200,0
+5148,2026-07-10,K109,Karachi,Home,Bedsheet,2,2200,0.1
+5148,2026-07-10,K109,Karachi,Home,Cookware Set,3,8000,0
+5148,2026-07-10,K109,Karachi,Grocery,Biscuits,2,120,0.1
+5149,2026-06-02,K090,Karachi,Home,Cookware Set,1,8000,0.05
+5149,2026-06-02,K090,Karachi,Grocery,Cooking Oil,3,1200,0
+5149,2026-06-02,K090,Karachi,Fashion,Sneakers,3,7000,0
+5150,2026-05-29,K033,Lahore,Grocery,Rice 5kg,2,1800,0.1
+5150,2026-05-29,K033,Lahore,Home,Cookware Set,1,8000,0.1
+5151,2026-02-09,K064,Lahore,Fashion,Kurta,2,3500,0
+5151,2026-02-09,K064,Lahore,Electronics,Smart Lamp,1,2800,0
+5151,2026-02-09,K064,Lahore,Home,Cookware Set,3,8000,0
+5151,2026-02-09,K064,Lahore,Electronics,Smart Lamp,3,2800,0
+5152,2026-02-20,K039,Peshawar,Grocery,Tea Pack,3,650,
+5153,2026-03-12,K028,Lahore,Grocery,Biscuits,3,120,0
+5153,2026-03-12,K028,Lahore,Grocery,Biscuits,5,120,0
+5153,2026-03-12,K028,Lahore,Electronics,Earbuds Pro,2,4860,0
+5153,2026-03-12,K028,Lahore,Grocery,Rice 5kg,3,1800,0.05
+5154,2026-01-06,K066,Lahore,Grocery,Tea Pack,1,650,0
+5154,2026-01-06,K066,Lahore,Grocery,Biscuits,5,120,0.1
+5154,2026-01-06,K066,Lahore,Grocery,Rice 5kg,5,1800,
+5155,2026-06-20,K047,Lahore,Electronics,Smart Lamp,2,2800,0
+5155,2026-06-20,K047,Lahore,Electronics,Smart Lamp,3,2800,0
+5155,2026-06-20,K047,Lahore,Grocery,Biscuits,2,120,0.05
+5155,2026-06-20,K047,Lahore,Grocery,Cooking Oil,2,1200,0
+5156,2026-08-06,K124,Peshawar,Electronics,Power Bank,2,3200,0.1
+5156,2026-08-06,K124,Peshawar,Grocery,Cooking Oil,2,1200,0
+5157,2026-07-19,K100,Karachi,Grocery,Biscuits,1,120,0
+5157,2026-07-19,K100,Karachi,Home,Bedsheet,1,2200,0
+5158,2026-07-03,K133,Lahore,Electronics,Smart Lamp,2,2800,0.05
+5158,2026-07-03,K133,Lahore,Grocery,Rice 5kg,5,1800,0.1
+5159,2026-01-05,K134,Islamabad,Fashion,Sneakers,2,7000,0
+5159,2026-01-05,K134,Islamabad,Grocery,Biscuits,2,120,0.05
+5160,2026-05-12,K092,Karachi,Electronics,Power Bank,1,3200,0.05
+5160,2026-05-12,K092,Karachi,Fashion,Cap,1,900,0
+5160,2026-05-12,K092,Karachi,Fashion,Cap,2,900,0
+5160,2026-05-12,K092,Karachi,Grocery,Cooking Oil,1,1200,0
+5161,2026-03-19,K135,Peshawar,Grocery,Biscuits,5,120,0.05
+5162,2026-02-24,K034,Lahore,Grocery,Tea Pack,2,650,0.05
+5163,2026-06-14,K038,Lahore,Grocery,Cooking Oil,5,1200,0.05
+5163,2026-06-14,K038,Lahore,Grocery,Biscuits,2,120,0.05
+5164,2026-04-01,K069,Lahore,Fashion,Sneakers,1,7000,0.05
+5164,2026-04-01,K069,Lahore,Grocery,Cooking Oil,5,1200,0
+5164,2026-04-01,K069,Lahore,Grocery,Tea Pack,3,650,0
+5164,2026-04-01,K069,Lahore,Home,Cookware Set,1,8000,0
+5165,2026-05-03,K110,Peshawar,Grocery,Cooking Oil,3,1200,0
+5165,2026-05-03,K110,Peshawar,Grocery,Biscuits,5,120,0
+5165,2026-05-03,K110,Peshawar,Electronics,Power Bank,2,3200,0
+5166,2026-07-20,K136,Lahore,Grocery,Cooking Oil,1,1200,0
+5166,2026-07-20,K136,Lahore,Home,Cookware Set,1,8000,0
+5167,2026-03-06,K149,Karachi,Grocery,Tea Pack,2,650,
+5168,2026-03-30,K054,Lahore,Grocery,Tea Pack,2,650,0.1
+5168,2026-03-30,K054,Lahore,Grocery,Biscuits,1,120,
+5169,2026-07-21,K051,Islamabad,Grocery,Cooking Oil,1,1200,0.05
+5169,2026-07-21,K051,Islamabad,Grocery,Cooking Oil,1,1200,0.1
+5170,2026-01-31,K108,Islamabad,Grocery,Tea Pack,5,650,0.05
+5171,2026-05-23,K124,Karachi,Grocery,Biscuits,5,120,0
+5171,2026-05-23,K124,Karachi,Grocery,Rice 5kg,1,1800,0
+5172,2026-08-04,K120,Islamabad,Grocery,Cooking Oil,3,1200,0.05
+5172,2026-08-04,K120,Islamabad,Fashion,Cap,2,900,0
+5172,2026-08-04,K120,Islamabad,Home,Cookware Set,1,8000,0
+5172,2026-08-04,K120,Islamabad,Electronics,Power Bank,1,3200,0
+5173,2026-07-27,K131,Karachi,Grocery,Rice 5kg,2,1800,0
+5173,2026-07-27,K131,Karachi,Home,Cookware Set,2,8000,0
+5174,2026-03-28,K094,Karachi,Grocery,Rice 5kg,2,1800,0
+5174,2026-03-28,K094,Karachi,Fashion,Cap,2,900,0
+5175,2026-05-22,K075,Karachi,Fashion,Sneakers,2,7000,0.05
+5175,2026-05-22,K075,Karachi,Fashion,Sneakers,1,7000,0.1
+5176,2026-03-30,K127,Lahore,Fashion,Kurta,1,3500,0
+5177,2026-02-02,K011,Karachi,Grocery,Cooking Oil,5,1200,0.1
+5177,2026-02-02,K011,Karachi,Grocery,Rice 5kg,5,1800,0
+5178,2026-01-28,K012,Karachi,Grocery,Tea Pack,5,650,0.1
+5179,2026-07-16,K129,Karachi,Grocery,Cooking Oil,2,1200,0.1
+5179,2026-07-16,K129,Karachi,Grocery,Biscuits,1,120,0
+5179,2026-07-16,K129,Karachi,Electronics,Power Bank,3,3200,0.05
+5180,2026-06-10,K026,Lahore,Electronics,Smart Lamp,1,2800,0.05
+5180,2026-06-10,K026,Lahore,Grocery,Tea Pack,1,650,0
+5180,2026-06-10,K026,Lahore,Grocery,Tea Pack,2,650,0
+5180,2026-06-10,K026,Lahore,Grocery,Rice 5kg,3,1800,0
+5181,2026-02-17,K009,Peshawar,Electronics,Earbuds Pro,2,4680,0.1
+5181,2026-02-17,K009,Peshawar,Grocery,Biscuits,1,120,0.05
+5182,not recorded,K031,Karachi,Grocery,Cooking Oil,5,1200,0.05
+5182,2026-05-26,K031,Karachi,Electronics,Power Bank,3,3200,0.05
+5183,2026-06-02,K122,Lahore,Grocery,Rice 5kg,1,1800,0.05
+5183,2026-06-02,K122,Lahore,Electronics,Smart Lamp,1,2800,0
+5184,2026-04-20,K003,Karachi,Grocery,Cooking Oil,1,1200,0
+5184,2026-04-20,K003,Karachi,Grocery,Biscuits,2,120,0.05
+5184,2026-04-20,K003,Karachi,Electronics,Earbuds Pro,3,5040,0.1
+5184,2026-04-20,K003,Karachi,Home,Cookware Set,3,8000,0
+5185,2026-01-13,K038,Islamabad,Grocery,Tea Pack,3,650,0.1
+5185,2026-01-13,K038,Islamabad,Grocery,Cooking Oil,5,1200,0
+5185,2026-01-13,K038,Islamabad,Grocery,Biscuits,1,120,0
+5185,2026-01-13,K038,Islamabad,Electronics,Earbuds Pro,1,4500,0.1
+5186,2026-01-21,K080,Peshawar,Grocery,Cooking Oil,2,1200,0.05
+5186,2026-01-21,K080,Peshawar,Grocery,Cooking Oil,3,1200,0
+5187,2026-05-28,K121,Peshawar,Home,Blender,1,6500,0
+5187,2026-05-28,K121,Peshawar,Grocery,Biscuits,2,120,0.05
+5187,2026-05-28,K121,Peshawar,Grocery,Rice 5kg,5,1800,0
+5187,2026-05-28,K121,Peshawar,Grocery,Tea Pack,3,650,0
+5188,2026-03-13,K086,Karachi,Grocery,Tea Pack,1,650,0
+5188,2026-03-13,K086,Karachi,Grocery,Cooking Oil,3,1200,0.1
+5188,2026-03-13,K086,Karachi,Fashion,Cap,1,900,0.05
+5189,2026-04-10,K060,Peshawar,Home,Bedsheet,1,2200,0
+5189,2026-04-10,K060,Peshawar,Home,Bedsheet,2,2200,0
+5190,2026-05-31,K074,Karachi,Grocery,Tea Pack,2,650,0
+5191,2026-08-06,K089,Peshawar,Electronics,Smart Lamp,2,2800,0.05
+5191,2026-08-06,K089,Peshawar,Grocery,Tea Pack,2,650,0
+5191,2026-08-06,K089,Peshawar,Fashion,Sneakers,1,7000,0.05
+5192,2026-04-30,K066,Lahore,Grocery,Tea Pack,5,650,0.05
+5192,2026-04-30,K066,Lahore,Grocery,Rice 5kg,3,1800,0
+5192,2026-04-30,K066,Lahore,Home,Cookware Set,2,8000,0.1
+5193,2026-03-08,K123,Islamabad,Grocery,Cooking Oil,2,1200,0
+5193,2026-03-08,K123,Islamabad,Home,Blender,1,6500,0
+5193,2026-03-08,K123,Islamabad,Fashion,Sneakers,2,7000,0
+5194,2026-04-14,K064,Lahore,Grocery,Biscuits,5,120,0
+5195,2026-08-10,K096,Karachi,Grocery,Rice 5kg,1,1800,0
+5195,2026-08-10,K096,Karachi,Fashion,Sneakers,1,7000,0
+5195,2026-08-10,K096,Karachi,Fashion,Kurta,2,3500,0
+5195,2026-08-10,K096,Karachi,Electronics,Smart Lamp,1,2800,0.1
+5196,2026-05-05,K067,Lahore,Fashion,Cap,2,900,0.1
+5196,2026-05-05,K067,Lahore,Grocery,Tea Pack,2,650,0
+5197,2026-08-04,K087,Karachi,Grocery,Biscuits,5,120,0
+5198,2026-01-08,K009,Karachi,Fashion,Sneakers,3,7000,0.05
+5198,2026-01-08,K009,Karachi,Grocery,Rice 5kg,1,1800,0.1
+5198,2026-01-08,K009,Karachi,Grocery,Cooking Oil,1,1200,0
+5199,2026-03-07,K145,,Grocery,Cooking Oil,5,1200,0
+5200,2026-04-25,K095,Lahore,Grocery,Biscuits,2,120,0
+5201,2026-01-10,K091,Islamabad,Grocery,Biscuits,1,120,0
+5202,2026-03-08,K015,Peshawar,Electronics,Smart Lamp,1,2800,0
+5203,2026-06-23,K113,Islamabad,Electronics,Smart Lamp,1,2800,0
+5203,2026-06-23,K113,Islamabad,Electronics,Smart Lamp,1,2800,0
+5203,2026-06-23,K113,Islamabad,Fashion,Cap,1,900,0.05
+5203,2026-06-23,K113,Islamabad,Electronics,Smart Lamp,1,2800,0
+5204,2026-04-30,K010,Lahore,Grocery,Biscuits,2,120,0
+5205,2026-06-08,K036,Islamabad,Grocery,Biscuits,5,120,0
+5205,2026-06-08,K036,Islamabad,Grocery,Rice 5kg,5,1800,0
+5206,2026-03-24,K123,Lahore,Grocery,Cooking Oil,2,1200,
+5207,2026-02-26,K047,Karachi,Fashion,Cap,1,900,0.05
+5207,2026-02-26,K047,Karachi,Grocery,Biscuits,3,120,0.05
+5207,2026-02-26,K047,Karachi,Fashion,Cap,1,900,
+5207,2026-02-26,K047,Karachi,Home,Bedsheet,1,2200,0
+5208,2026-07-25,K067,Lahore,Electronics,Smart Lamp,2,2800,0.05
+5208,2026-07-25,K067,Lahore,Electronics,Smart Lamp,2,2800,0
+5209,2026-06-11,K144,Lahore,Grocery,Tea Pack,1,650,0
+5209,2026-06-11,K144,Lahore,Grocery,Cooking Oil,3,1200,0.05
+5210,2026-03-08,K061,Lahore,Fashion,Sneakers,2,7000,0
+5211,2026-01-15,K037,Islamabad,Electronics,Earbuds Pro,2,4500,0
+5211,2026-01-15,K037,Islamabad,Grocery,Rice 5kg,5,1800,0
+5211,2026-01-15,K037,Islamabad,Grocery,Tea Pack,3,650,0
+5211,2026-01-15,K037,Islamabad,Fashion,Kurta,1,3500,0.05
+5212,2026-02-25,K147,Islamabad,Electronics,Smart Lamp,1,2800,0.1
+5213,2026-07-17,K045,Lahore,Grocery,Cooking Oil,1,1200,0.1
+5214,2026-07-07,K071,Peshawar,Home,Cookware Set,2,8000,0
+5215,2026-05-30,K052,Islamabad,Electronics,Power Bank,3,3200,0.1
+5216,2026-04-15,K133,Karachi,Fashion,Kurta,3,3500,0.05
+5216,2026-04-15,K133,Karachi,Electronics,Power Bank,2,3200,0.05
+5217,2026-02-04,K064,Islamabad,Grocery,Rice 5kg,3,1800,0
+5218,2026-02-11,K148,Islamabad,Grocery,Tea Pack,3,650,0.1
+5218,2026-02-11,K148,Islamabad,Grocery,Biscuits,1,120,0
+5218,2026-02-11,K148,Islamabad,Fashion,Kurta,1,3500,0
+5219,2026-07-19,K148,Peshawar,Fashion,Kurta,1,3500,
+5220,2026-04-25,K136,Karachi,Electronics,Smart Lamp,1,2800,0
+5220,2026-04-25,K136,Karachi,Home,Cookware Set,1,8000,0
+5220,2026-04-25,K136,Karachi,Electronics,Power Bank,1,3200,0.1
+5221,2026-07-29,K005,Karachi,Grocery,Biscuits,2,120,0
+5222,2026-01-05,K134,Peshawar,Grocery,Cooking Oil,1,1200,0
+5223,2026-08-11,K046,Karachi,Fashion,Kurta,2,3500,0.05
+5224,2026-05-30,K029,Islamabad,Electronics,Smart Lamp,1,2800,0.1
+5225,2026-06-01,K059,Lahore,Grocery,Cooking Oil,5,1200,0.05
+5226,2026-02-12,K100,Karachi,Fashion,Cap,2,900,0.1
+5226,2026-02-12,K100,Karachi,Electronics,Earbuds Pro,1,4680,0
+5226,2026-02-12,K100,Karachi,Fashion,Kurta,1,3500,0
+5226,2026-02-12,K100,Karachi,Grocery,Cooking Oil,3,1200,0.05
+5227,2026-08-05,K084,Karachi,Home,Blender,3,6500,0
+5227,2026-08-05,K084,Karachi,Home,Bedsheet,2,2200,0
+5227,2026-08-05,K084,Karachi,Fashion,Cap,2,900,0
+5228,2026-01-18,K111,Islamabad,Grocery,Rice 5kg,1,1800,0
+5229,2026-02-05,K102,Peshawar,Grocery,Cooking Oil,1,1200,0
+5229,2026-02-05,K102,Peshawar,Grocery,Biscuits,3,120,
+5230,2026-03-11,K026,Karachi,Electronics,Smart Lamp,1,2800,
+5230,2026-03-11,K026,Karachi,Home,Cookware Set,1,8000,0
+5231,2026-01-29,K089,,Electronics,Smart Lamp,1,2800,0.1
+5231,2026-01-29,K089,Islamabad,Grocery,Biscuits,3,120,0
+5231,2026-01-29,K089,Islamabad,Grocery,Rice 5kg,2,1800,0.05
+5231,2026-01-29,K089,Islamabad,Electronics,Power Bank,1,3200,0
+5232,2026-04-15,K071,Islamabad,Grocery,Tea Pack,3,650,0.05
+5233,2026-06-06,K099,Lahore,Grocery,Rice 5kg,3,1800,0.05
+5234,2026-05-21,K123,Islamabad,Grocery,Tea Pack,1,650,0
+5234,2026-05-21,K123,Islamabad,Fashion,Sneakers,1,7000,0.1
+5235,2026-05-20,K150,Peshawar,Electronics,Earbuds Pro,1,5220,0
+5235,2026-05-20,K150,Peshawar,Grocery,Biscuits,2,120,0
+5236,2026-05-23,K126,Islamabad,Home,Bedsheet,1,2200,0
+5236,2026-05-23,K126,Islamabad,Electronics,Power Bank,1,3200,0
+5237,2026-05-22,K090,Karachi,Grocery,Cooking Oil,5,1200,0.05
+5237,2026-05-22,K090,Karachi,Fashion,Sneakers,1,7000,0.1
+5238,2026-02-27,K107,Lahore,Grocery,Cooking Oil,2,1200,0
+5238,2026-02-27,K107,Lahore,Grocery,Cooking Oil,3,1200,0.1
+5239,2026-01-25,K069,Peshawar,Grocery,Cooking Oil,2,1200,0.05
+5239,2026-01-25,K069,Peshawar,Grocery,Biscuits,1,120,0.05
+5239,2026-01-25,K069,Peshawar,Grocery,Tea Pack,1,650,0.05
+5239,2026-01-25,K069,Peshawar,Fashion,Sneakers,2,7000,0
+5240,2026-04-17,K029,Islamabad,Grocery,Tea Pack,5,650,0
+5240,2026-04-17,K029,Islamabad,Grocery,Tea Pack,3,650,0
+5241,2026-04-11,K083,Peshawar,Grocery,Tea Pack,5,650,0.05
+5242,2026-04-24,K048,Islamabad,Fashion,Kurta,1,3500,0.05
+5242,2026-04-24,K048,Islamabad,Grocery,Rice 5kg,2,1800,0
+5242,2026-04-24,K048,Islamabad,Grocery,Tea Pack,3,650,0
+5243,2026-08-04,K084,Lahore,Grocery,Biscuits,1,120,0
+5244,2026-01-13,K145,Islamabad,Home,Bedsheet,2,2200,0
+5244,2026-01-13,K145,Islamabad,Grocery,Rice 5kg,5,1800,0.1
+5245,2026-07-31,K100,Peshawar,Fashion,Sneakers,2,7000,0
+5245,2026-07-31,K100,Peshawar,Grocery,Rice 5kg,1,1800,0
+5246,2026-05-15,K026,Lahore,Fashion,Sneakers,2,7000,0.1
+5246,2026-05-15,K026,Lahore,Grocery,Biscuits,2,120,0
+5247,2026-04-18,K103,Peshawar,Grocery,Tea Pack,3,650,0.1
+5247,2026-04-18,K103,Peshawar,Grocery,Tea Pack,1,650,0
+5248,2026-04-03,K094,Islamabad,Grocery,Tea Pack,2,650,0
+5249,2026-06-17,K088,Islamabad,Grocery,Biscuits,5,120,0
+5249,2026-06-17,K088,Islamabad,Grocery,Rice 5kg,2,1800,0.1
+5249,2026-06-17,K088,Islamabad,Grocery,Biscuits,5,120,0
+5250,2026-01-16,K091,Karachi,Grocery,Biscuits,1,120,0.05
+5250,2026-01-16,K091,Karachi,Electronics,Earbuds Pro,1,4500,0
+5250,2026-01-16,K091,Karachi,Grocery,Cooking Oil,1,1200,0
+5251,2026-04-12,K004,Karachi,Electronics,Earbuds Pro,1,5040,0.05
+5251,2026-04-12,K004,Karachi,Grocery,Tea Pack,3,650,0.1
+5251,2026-04-12,K004,Karachi,Grocery,Rice 5kg,2,1800,0.1
+5251,2026-04-12,K004,Karachi,Home,Blender,2,6500,0
+5252,2026-02-07,K133,Lahore,Electronics,Power Bank,1,3200,0
+5252,2026-02-07,K133,Lahore,Electronics,Smart Lamp,2,2800,0.05
+5252,2026-02-07,K133,Lahore,Grocery,Tea Pack,5,650,0
+5253,2026-06-16,K149,Karachi,Electronics,Smart Lamp,1,2800,0
+5253,2026-06-16,K149,Karachi,Home,Blender,1,6500,0
+5254,2026-06-10,K150,Karachi,Home,Cookware Set,2,8000,0.1
+5255,2026-04-09,K014,Karachi,Grocery,Biscuits,1,120,0.05
+5256,2026-01-14,K064,Lahore,Electronics,Earbuds Pro,2,4500,0
+5257,2026-03-22,K117,Karachi,Fashion,Cap,1,900,0.05
+5257,2026-03-22,K117,Karachi,Grocery,Biscuits,1,120,0
+5258,2026-06-23,K150,,Fashion,Kurta,2,3500,0.05
+5259,2026-01-06,K023,Lahore,Electronics,Smart Lamp,2,2800,0
+5260,2026-01-02,K102,Islamabad,Fashion,Kurta,1,3500,0.1
+5260,2026-01-02,K102,Islamabad,Grocery,Biscuits,3,120,0.05
+5260,2026-01-02,K102,Islamabad,Grocery,Cooking Oil,1,1200,0.05
+5261,2026-07-31,K142,Islamabad,Fashion,Cap,2,900,0
+5262,2026-03-30,K112,Lahore,Home,Bedsheet,1,2200,0
+5263,2026-07-26,K062,Lahore,Home,Blender,1,6500,0
+5263,2026-07-26,K062,Lahore,Grocery,Rice 5kg,2,1800,0.1
+5263,2026-07-26,K062,Lahore,Grocery,Rice 5kg,2,1800,0
+5263,2026-07-26,K062,Lahore,Fashion,Cap,1,900,0.05
+5264,2026-04-07,K077,Lahore,Grocery,Rice 5kg,2,1800,0.05
+5264,2026-04-07,K077,Lahore,Grocery,Cooking Oil,3,1200,0.1
+5265,2026-04-23,K137,Islamabad,Fashion,Cap,2,900,0
+5266,2026-02-02,K132,Karachi,Grocery,Rice 5kg,3,1800,
+5267,2026-01-08,K080,Lahore,Fashion,Sneakers,1,7000,0
+5268,2026-07-18,K083,Lahore,Grocery,Cooking Oil,1,1200,0
+5269,2026-05-24,K129,Islamabad,Home,Cookware Set,3,8000,0
+5269,2026-05-24,K129,Islamabad,Electronics,Power Bank,1,3200,0
+5270,2026-07-29,K073,Peshawar,Fashion,Cap,2,900,0
+5270,2026-07-29,K073,Peshawar,Grocery,Biscuits,2,120,0
+5271,2026-04-04,K106,Islamabad,Grocery,Cooking Oil,5,1200,
+5272,2026-08-05,K091,Peshawar,Electronics,Smart Lamp,1,2800,0
+5272,2026-08-05,K091,Peshawar,Fashion,Kurta,2,3500,0
+5272,2026-08-05,K091,Peshawar,Grocery,Tea Pack,1,650,0.05
+5272,2026-08-05,K091,Peshawar,Electronics,Power Bank,1,3200,0.05
+5273,2026-02-20,K040,Islamabad,Grocery,Tea Pack,3,650,
+5273,2026-02-20,K040,Islamabad,Grocery,Rice 5kg,2,1800,0.1
+5274,2026-05-08,K112,Islamabad,Grocery,Cooking Oil,3,1200,0
+5274,2026-05-08,K112,Islamabad,Electronics,Smart Lamp,3,2800,0
+5274,2026-05-08,K112,Islamabad,Grocery,Biscuits,1,120,0
+5274,2026-05-08,K112,Islamabad,Grocery,Cooking Oil,1,1200,0
+5275,2026-02-23,K023,Islamabad,Grocery,Cooking Oil,5,1200,0.1
+5275,2026-02-23,K023,Islamabad,Grocery,Tea Pack,3,650,0.1
+5276,2026-01-24,K109,Islamabad,Grocery,Biscuits,5,120,0.1
+5276,2026-01-24,K109,Islamabad,Electronics,Earbuds Pro,3,4500,0
+5277,2026-04-20,K126,Lahore,Electronics,Earbuds Pro,3,5040,0.1
+5278,2026-03-08,K140,Lahore,Grocery,Biscuits,2,120,0.1
+5279,2026-03-08,K016,Lahore,Fashion,Sneakers,2,7000,0
+5280,2026-02-21,K036,Islamabad,Grocery,Cooking Oil,5,1200,0.05
+5281,2026-03-02,K002,Lahore,Grocery,Cooking Oil,2,1200,0
+5281,2026-03-02,K002,Lahore,Grocery,Cooking Oil,2,1200,0
+5281,2026-03-02,K002,Lahore,Grocery,Cooking Oil,2,1200,0
+5282,2026-06-11,K141,Karachi,Grocery,Tea Pack,2,650,0
+5282,2026-06-11,K141,Karachi,Grocery,Rice 5kg,5,1800,0.05
+</textarea>
+<h3>First rows (preview)</h3><div class="wrap"><table><thead><tr><th>order_id</th><th>order_date</th><th>customer_id</th><th>region</th><th>category</th><th>product</th><th>quantity</th><th>unit_price</th><th>discount</th></tr></thead><tbody><tr><td>5001</td><td>2026-03-24</td><td>K102</td><td>Lahore</td><td>Electronics</td><td>Earbuds Pro</td><td>2</td><td>4860</td><td>0</td></tr><tr><td>5001</td><td>2026-03-24</td><td>K102</td><td>Lahore</td><td>Fashion</td><td>Sneakers</td><td>1</td><td>7000</td><td>0.1</td></tr><tr><td>5001</td><td>2026-03-24</td><td>K102</td><td>Lahore</td><td>Home</td><td>Cookware Set</td><td>1</td><td>8000</td><td>0.05</td></tr><tr><td>5001</td><td>2026-03-24</td><td>K102</td><td>Lahore</td><td>Fashion</td><td>Cap</td><td>1</td><td>900</td><td>0</td></tr><tr><td>5002</td><td>2026-05-22</td><td>K016</td><td>Peshawar</td><td>Electronics</td><td>Smart Lamp</td><td>1</td><td>2800</td><td>0.1</td></tr><tr><td>5002</td><td>2026-05-22</td><td>K016</td><td>Peshawar</td><td>Grocery</td><td>Biscuits</td><td>5</td><td>120</td><td>0</td></tr><tr><td>5002</td><td>2026-05-22</td><td>K016</td><td>Peshawar</td><td>Grocery</td><td>Biscuits</td><td>1</td><td>120</td><td>0.1</td></tr><tr><td>5003</td><td>2026-08-08</td><td>K075</td><td>Lahore</td><td>Home</td><td>Blender</td><td>1</td><td>6500</td><td>0.1</td></tr></tbody></table></div>
+<script>var b=document.getElementById('b'),t=document.getElementById('t'),m=document.getElementById('m');
+b.onclick=function(){t.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}
+if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t.value).then(function(){m.textContent='Copied.';},function(){m.textContent='Press Ctrl+C (or long-press, Copy).';});return;}
+m.textContent=ok?'Copied.':'Press Ctrl+C (or long-press, Copy).';};</script></body></html>
