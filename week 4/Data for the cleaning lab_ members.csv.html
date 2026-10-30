@@ -1,0 +1,336 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Data for the cleaning lab: members.csv</title>
+<style>:root{--bg:#f7f5ef;--ink:#1b2a41;--mut:#5f6b7a;--card:#ffffff;--bd:#e0dcd0;--ac:#d9661f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b}}
+:root[data-theme="dark"]{--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--ink);font-family:Helvetica,Arial,sans-serif;padding:24px;line-height:1.5;max-width:980px}
+h1{font-family:Georgia,serif;margin:0 0 8px}.mut{color:var(--mut)}.box{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 18px;margin:16px 0}
+code,textarea{font-family:'Courier New',monospace;font-size:13px}textarea{width:100%;height:260px;box-sizing:border-box;background:var(--card);color:var(--ink);border:1px solid var(--bd);border-radius:8px;padding:10px}
+button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-size:16px;cursor:pointer;margin:8px 0}.wrap{overflow-x:auto}table{border-collapse:collapse;font-size:13px}th,td{padding:4px 10px;border-bottom:1px solid var(--bd);white-space:nowrap;text-align:left}th{color:var(--ac)}pre{margin:6px 0;overflow-x:auto}</style></head>
+<body><h1>Data for the cleaning lab: members.csv</h1><p class="mut">317 fictional gym members, deliberately broken, for the data cleaning lab. Do not trust anything yet. Fictional data for classroom use.</p>
+<div class="box"><b>Load it in Google Colab (2 steps)</b><ol><li>Press the button below to copy the data.</li><li>In a Colab cell, type the first line exactly, paste the data under it, and run the cell:<pre><code>%%writefile members.csv
+(paste here)</code></pre></li></ol>Then check with <code>!head -3 members.csv</code>. </div>
+<button id="b">Copy data</button> <span id="m" class="mut"></span>
+<textarea id="t" readonly>member_id,full_name,age,gender,city,phone,join_date,monthly_fee,sessions_per_month,last_visit,satisfaction
+M0012,Talha Hussain,33,Male,Lahore,0300-7919617,05/02/2024,0,4,2024-06-03,5
+M0035,Shahid Sheikh,43,Female,,03005582659,2024-11-04,3000,1,2025-08-12,2
+M0109,Mehwish Ansari,39,Male,ISB,12345,2024-07-26,4500,2,2025-05-09,4
+M0047,Bilal Siddiqui,27,M,Lahore,03118252932,11/12/2024,4500,18,2025-04-26,4
+M0021,Bilal Qureshi,48,Male,Lahore,03001553690,2024-06-27,&quot;Rs 4,500&quot;,17,2024-12-20,
+M0187,Ayesha Hussain,46,Male,Lahore,03488377568,2024-03-08,9000,5,2024-07-10,5
+M0302,ayesha ansari,50,,Karachi,03222841616,&quot;Mar 20, 2025&quot;,4500,0,,
+M0059,Hamza Qureshi,56,Male,Lahore,03001390529,2025-01-13,0,2,2025-08-01,3
+M0111,Saad Hussain,32,Female ,Lahore,03006055766,2024-12-30,6000,22,2025-06-05,3
+M0017,Shahid Raza,38,Male,Krachi,03174268609,2025-07-08,3000,5,2025-12-18,2
+M0077 ,maryam ahmed,51,MALE,Karachi,,2024-07-08,6000,14,2025-03-26,4
+M0151,Rabia Khan,34,Male,Karachi,03002575811,2025-05-04,9000,0,2025-09-19,4
+M0186,Bilal Sheikh,26,Female,Lahore,03007120218,2024-09-04,4000,20,2025-06-27,3
+M0265,Saad Sheikh,,Male,Karachi,+92 311 8813797,2025-06-02,4000,24,2025-07-15,3
+M0107,Areeba Raza,52,Male,Karachi,0318 213 2674,2025-04-30,6000,14,2025-09-27,4
+M0027,Talha Ahmed,18,Male,Islamabad,03488282604,2025-02-04,6000,22,2025-02-12,1
+M0182,Hamza Ahmed,45,Female,Karachi,0325-2922456,2024-09-24,3000,18,2024-12-06,3
+M0010,Areeba Ahmed,43,Female,lahore,03003220080,2024-11-05,7500,4,2025-08-12,2
+M0285,Farhan Raza,57,Female,karachi,03177822720,2024-03-02,9000,15,2024-06-11,5
+M0069,Farhan Baig,57,F,ISB,03008644193,2024-01-18,6000,22,2024-09-22,2
+M0178,Bilal Sheikh,20,Male,Karachi,0330-4688253,2025-01-24,4000,21,2025-10-20,5
+M0211,Hira Hussain,41,Male,Islamabad,03007966931,&quot;Nov 24, 2024&quot;,9000,14,2025-08-17,3
+M0287,Usman Ahmed,24,Female,Karachi,03122082296,2025-03-14,4500,22,2025-09-22,5
+M0222,Talha Hussain,37,Female,Krachi,03106821768,2024-11-13,7500,14,2025-03-24,5
+M0266,Usman Baig,38,Male,Islamabad,03009374491,2024-05-21,9000,1,2024-06-02,1
+M0247,Hamza Ahmed,53,Female,Lahore,+92 318 3678388,2025-03-02,7500,20,2025-11-13,5
+M0161,Fatima Khan,28,Female,Lahore,03377929752,2024-11-15,7500,19,2024-11-27,4
+M0063,Noor Siddiqui,28,Male,Lahore,03135900693,2024-08-05,&quot;Rs 4,500&quot;,5,,4
+M0174,Usman Qureshi,53,Female,Karachi,03109866559,2025-02-08,4000,15,2025-06-06,5
+M0240,Saad Ansari,28,Male,Karachi,03001121097,2025-08-08,4500,18,2026-02-14,4
+M0220,Zain Raza,37,Male,Karachi,03157887160,2025-07-04,5000,,2026-04-04,2
+M0165,Ali Ahmed,48,M,Karachi,03175843944,28/09/2025,4000,4,2026-02-21,3
+M0202,Shahid Malik,27,Other,Karachi,03189091536,2025-06-10,4000,6,2025-12-30,4
+M0110,Rabia Hussain,55,Male,Lahore,03396428978,2024-12-30,7500,15,2025-02-22,
+M0253,Farhan Hussain,42,male,Karachi,03439622347,2024-09-28,4000,2,2025-04-03,3
+M0034,Shahid Siddiqui,44,Male,Lahore,+92 341 6047165,2025-04-28,6000,10,2026-02-08,3
+M0244,Rabia Ansari,34,Female,Karachi,03491247174,07/07/2024,6000,8,2024-11-27,5
+M0257,Ayesha Ansari,50,Female,Karachi,03191733347,2025-05-05,5000,18,2025-07-09,3
+M0144, Farhan Malik ,28,Female,Karachi,03001802117,2025-03-01,4000,1,2025-08-28,3
+M0206,Hamza Baig,45,MALE,Karachi,03412440940,15/04/2024,7500,6,2024-08-15,3
+M0273,Sana Siddiqui,26,M,Karachi,3206625062,12/03/2025,6000,6,2025-09-06,4
+M0077,Maryam Ahmed,51,MALE,Karachi,,2024-07-08,6000,14,2025-03-26,4
+M0194,FATIMA QURESHI,-5,Male,Karachi,0329 497 5502,2024-06-30,5000,5,2025-03-17,3
+M0116,Fatima Ahmed,23,Male,Karachi,3175121186,2024-09-22,6000,9,2025-06-19,4
+M0031,Areeba Baig,20,Female,Islamabad,03001705157,2025-02-04,5000,24,2025-07-21,5
+M0024,Hamza Khan,60,Female,lahore,0314-6197676,2024-01-10,-4000,3,2024-07-06,3
+M0092,Sana Sheikh,35,Female,LHR,03006381817,2025-07-05,3000,23,,5
+M0003, Mehwish Ahmed ,,MALE,Karachi,03165860478,2024-06-11,3000,11,2024-08-07,4
+M0097,Saad Ansari,28,Female,Karachi,03288310839,2024-11-04,5000,4,2025-08-29,3
+M0169,Fatima Khan,50,Female,karachi,03006758809,&quot;Oct 21, 2024&quot;,9000,4,2025-07-25,
+M0204, Hira Khan ,0,Female,Lahore,03303723377,2024-07-05,3000,22,2025-01-23,1
+M0199,Talha Ahmed,33,Male,Islamabad,03007020303,2025-04-16,5000,5,2025-06-26,4
+M0069 ,farhan baig,57,F,ISB,03008644193,2024-01-18,6000,22,2024-09-22,2
+M0117,Talha Sheikh,23,Male,Karachi,03006529166,2025-08-22,3000,2,2026-03-14,
+M0148,Usman Siddiqui,47,Male,,03006314441,&quot;Nov 30, 2024&quot;,7500,13,,5
+M0130, Iqra Khan ,20,Female,LHR,03002242274,2024-01-23,&quot;Rs 3,000&quot;,,2024-07-04,5
+M0290,Rabia Ansari,26,Female,,03477937584,2025-08-31,5000,15,2026-05-02,3
+M0020,Iqra Hussain,54,Female,Karachi,0327 424 2959,2025-03-31,4500,26,2025-12-10,N/A
+M0162,Sana Ahmed,19,Male,Karachi,3173456416,2024-09-12,6000,11,2025-01-25,4
+M0048,SANA AHMED,45,Female,Islamabad,03122453525,2024-02-09,7500,5,2024-08-27,3
+M0091,Noor Baig,47,Female,Karachi,3403121554,2024-11-04,4.5k,11,,4
+M0115,Usman Malik,21,Male,Lahore,12345,2025-07-08,3000,15,2025-10-26,5
+M0037,Maryam Baig,59,Male,Karachi,0300 532 8644,2025-03-03,3k,5,2025-03-20,2
+M0014,Rabia Baig,58,Female,Karachi,03003476195,2025-02-16,7500,0,2025-08-30,4
+M0229,Noor Ansari,999,Female,LHR,03102268451,2024-10-29,7500,9,2025-07-20,3
+M0250,Farhan Sheikh,41,Male,Lahore,03003126406,2025-01-26,5000,23,2025-11-15,4
+M0251,Ali Malik,48,MALE,Islamabad,03002380981,2025-03-26,9000,9,2025-05-15,4
+M0218,Areeba Malik,34,Female,Islamabad,,2024-09-10,4000,5,2025-06-11,2
+M0267,Rabia Sheikh,35,Male,Karachi,03001977313,2024-09-16,&quot;Rs 9,000&quot;,28,2025-03-01,1
+M0044,Talha Siddiqui,50,Female,Karachi,03003037499,30/09/2025,5000,11,2025-10-15,5
+M0192,Iqra Khan,32,Female,Karachi,03002938829,2024-10-25,4500,13,2024-10-25,1
+M0248,Bilal Raza,,Male,Islamabad,03001818667,2024-04-19,4000,12,2024-04-23,1
+M0007,Daniyal Khan,32,Female,Karachi,03001090543,2025-09-13,6000,20,2025-10-13,4
+M0112,Shahid Siddiqui,19,Female,Karachi ,3359913011,2025-02-05,,6,2025-05-06,4
+M0100,Areeba Ansari,42,Female,Karachi,03007628949,08/01/2024,&quot;Rs 3,000&quot;,13,2024-07-16,4
+M0011,Areeba Ahmed,46,Female,Islamabad,03279949199,09/02/2025,6000,26,2025-08-04,4
+M0085,Ali Baig,55,Female,Islamabad,03001025517,2025-04-14,4500,28,2025-05-28,4
+M0195,Bilal Khan,43,Female,Lahore,0336 427 6674,2025-04-02,4500,,2025-05-21,2
+M0277,Maryam Ahmed,,Female,Lahore,03226948565,20/11/2024,5000,26,2025-01-20,1
+M0087,Shahid Ahmed,36,Male,Islamabad,03004505437,12/06/2024,5000,4,2025-01-05,5
+M0018,Hamza Sheikh,29,Female,Lahore,03255607992,2025-07-29,15000,9,2025-09-26,4
+M0022,Talha Raza,24,Male,Karachi,,2024-01-05,7500,22,2024-05-01,4
+M0280,Sana Khan,28,Male,ISB,03474722805,2025-04-20,4500,17,2025-09-02,2
+M0138,Farhan Raza,39,female,Karachi,03005468039,2025-06-12,7500,5,2026-02-27,2
+M0025,Zain Baig,46,Male,Karachi,03001881149,2024-09-22,3000,0,2024-10-23,5
+M0243,Areeba Raza,23,,Lahore,03265733547,2024-06-13,4000,24,2025-03-10,5
+M0040,Saad Sheikh,33,Male,Karachi,0300-9681565,2024-07-15,5000,9,2024-12-24,5
+M0259,Daniyal Raza,49,Female,Lahore ,03004086264,2024-05-27,&quot;Rs 5,000&quot;,3,2024-12-27,1
+M0276, Sana Baig ,36,Male,Lahore,03007769828,01/05/2024,3000,6,2025-02-03,
+M0305,hamza khan,,Female,Karachi,03008296174,2024-10-07,9000,25,2024-11-11,2
+M0279,Talha Siddiqui,21,Male,Karachi,03137169162,2024-11-19,4000,24,2025-09-14,5
+M0073,Mehwish Sheikh,41,Male,Karachi,03008343115,2024-01-10,3000,2,2024-10-30,5
+M0246,Usman Khan,46,Female,Lahore,03161684016,2024-04-08,6000,0,2024-09-11,5
+M0126,Ali Khan,51,Male,Lahore,03001731263,2025-04-03,9000,7,2025-09-26,5
+M0013,Shahid Qureshi,34,Female ,Karachi,+92 341 3440682,14/05/2024,3000,2,2024-09-09,4
+M0263,Zain Ahmed,29,Female,Karachi,03337152884,2025-04-12,7500,8,2025-05-06,0
+M0190,Hamza Khan,-5,Male,Karachi,03445674952,2025-04-17,7500,99,2025-10-21,N/A
+M0207,Zain Qureshi,31,Female,Islamabad,03004130048,2024-06-11,&quot;Rs 3,000&quot;,20,2025-03-01,2
+M0291,Fatima Ansari,32,Male,KHI,+92 300 9067676,2024-11-13,3000,3,2025-09-09,2
+M0067,Fatima Khan,58,Female,Karachi,03313285903,2025-01-07,7500,9,2025-11-01,2
+M0049,MARYAM KHAN,41,Female,Islamabad,03486773365,2024-03-14,9000,20,2024-03-22,4
+M0142,Rabia Hussain,58,Female,Karachi,0300-3455325,2024-10-03,7500,7,2024-12-21,3
+M0080,Maryam Raza,35,Female,Karachi,0300 258 8190,2024-02-28,3000,0,2024-11-15,4
+M0087,Shahid Ahmed,36,Male,Islamabad,03004505437,12/06/2024,5000,4,2025-01-05,5
+M0228,Usman Baig,50,Male,Karachi ,3353280523,2024-05-02,9000,3,2024-06-17,4
+M0223,Hira Hussain,26,Female,Karachi,03163091552,2025-01-07,4500,24,2025-03-28,4
+M0102,Farhan Ahmed,31,Female,Lahore,03001451483,2024-04-12,,17,2024-05-13,4
+M0137,Usman Khan,30,Male,Karachi,03177082793,2024-07-12,5000,25,2024-09-22,
+M0084,Saad Baig,50,Male,Karachi,,2025-08-20,6000,20,2025-12-17,3
+M0093,Talha Siddiqui,18,Female,Karachi,0347-8529670,2025-05-10,4500,13,2025-10-21,
+M0114,Rabia Malik,45,Male,Lahore,+92 328 9084159,2024-02-07,9000,26,2024-02-12,3
+M0135,Areeba Raza,51,Female,Karachi,03139869358,2024-07-09,5000,5,2024-08-15,3
+M0104,Daniyal Ansari,32,,Karachi,3259396965,17/03/2025,7500,15,2025-06-04,4
+M0183,SAAD KHAN,,Male,Lahore,0326-1952486,2024-10-02,6000,27,2025-02-25,5
+M0168,Usman Baig,28,female,Lahore,03397881002,2025-09-23,4500,,2025-10-17,4
+M0159,Noor Siddiqui,40,Female,KHI,03156009187,06/05/2024,9000,10,2024-06-21,4
+M0233,Ayesha Siddiqui,26,Female,Karachi,3002979997,22/03/2024,4000,28,2024-10-10,4
+M0120,Maryam Sheikh,48,Male,Karachi,0348-2218119,2024-12-06,9000,6,2025-01-25,4
+M0167,Saad Hussain,38,Female,Krachi,03004799816,19/04/2024,9k,13,2024-11-20,5
+M0301,talha raza,24,male,Lahore,03216273699,2025-01-13,5000,3,2025-06-01,5
+M0146,Hira Qureshi,37,Female,,03242941996,2025-07-18,7500,18,2025-12-06,3
+M0193,Zain Hussain,22,Other,Islamabad,3145126029,2025-02-16,7500,23,2025-11-02,
+M0271,Hamza Qureshi,58,Female,Karachi,03001037439,2024-03-30,7500,12,2024-09-24,3
+M0053,Zain Hussain,34,Male,Islamabad,03002429519,2024-07-09,9000,7,2025-02-06,1
+M0149,Zain Raza,40,Female,,03133946252,30/07/2024,4500,28,,1
+M0158,Talha Siddiqui,50,MALE,Karachi,3325933369,2025-02-30,5000,10,,4
+M0071,Rabia Sheikh,49,Male,Islamabad,03303656120,2024-01-08,6000,21,2024-08-29,5
+M0134,Fatima Siddiqui,57,Male,Krachi,03005959399,2025-06-16,6000,27,2025-07-03,2
+M0225,Saad Ahmed,57,Female,Karachi ,3362234419,2025-10-02,&quot;Rs 5,000&quot;,17,2026-03-12,3
+M0057,Mehwish Hussain,29,Male,Lahore,03499592514,2024-05-26,9000,27,2025-02-19,5
+M0189,Hira Qureshi,38,Male,Karachi ,03004857991,2024-03-18,4000,22,2024-04-24,
+M0094,Fatima Ahmed,56,Female,Islamabad,03431451391,29/12/2024,4k,19,2025-04-19,3
+M0150,Zain Siddiqui,52,Female,Islamabad,03003549343,2024-04-19,5000,6,2024-10-15,5
+M0282,Daniyal Malik,27,Female,Karachi,03005656847,2024-02-12,4000,22,2024-10-16,5
+M0070,Ali Hussain,52,Male,Lahore,03003940563,2024-09-10,&quot;Rs 4,000&quot;,8,2025-02-05,1
+M0103, Daniyal Siddiqui ,19,F,Islamabad,03413983669,2025-03-08,4000,5,2025-08-18,5
+M0113,Hamza Khan,40,Female,karachi,0349-8342482,&quot;Aug 15, 2024&quot;,5000,22,2024-11-11,
+M0203,Rabia Sheikh,44,Female,Islamabad,12345,2024-06-11,3000,13,2024-08-22,2
+M0185,Hamza Ahmed,19,Male,Karachi ,03453026728,2024-10-30,5000,3,2025-01-26,5
+M0274,Sana Hussain,55,Female,Islamabad,03003972367,2024-01-07,4500,0,2024-06-26,1
+M0296,Ali Khan,22,Female,Lahore,03222090736,2025-03-20,4500,27,2025-01-20,
+M0210,Iqra Baig,58,Male,Karachi,03246674673,2025-01-13,5000,9,2025-08-09,3
+M0032,Ali Siddiqui,56,Female,Islamabad,03238640659,2024-04-19,3000,19,,2
+M0232,Iqra Siddiqui,34,Male,Lahore,03003953263,2024-08-28,3000,,2025-05-29,N/A
+M0237,Talha Raza,55,Female,Islamabad,03001217190,2025-08-30,5000,3,2025-09-19,4
+M0050,Ali Sheikh,32,,Karachi,03005373092,27/05/2024,4.5k,23,2024-08-10,2
+M0160,Zain Khan,45,Female,Islamabad,03008990511,2025-05-31,3000,18,2025-06-19,2
+M0043,Sana Malik,23,Female,Islamabad,03006756198,2024-02-16,3000,22,2024-05-19,3
+M0297,Daniyal Malik,43,Male,,03002889888,2024-11-16,5000,12,2025-02-23,4
+M0231,Shahid Qureshi,29,Male,Lahore,03007360783,2024-11-03,9000,6,2025-06-17,5
+M0270,Bilal Khan,60,Male,Karachi ,03007393613,2024-12-05,&quot;Rs 6,000&quot;,19,2025-08-30,4
+M0264,Zain Qureshi,33,male,Karachi,,2024-11-14,7500,3,,5
+M0234,Fatima Khan,51,Female,KHI,03443388969,2024-03-12,5000,11,2024-12-28,4
+M0278,Farhan Ahmed,55,Male,Karachi,03459310690,2024-08-24,,16,2025-01-14,5
+M0078,Hira Khan,36,M,Karachi,03002030516,2024-04-14,7500,2,2024-08-31,0
+M0188,Ayesha Hussain,36,Female,Karachi,03423718869,2025-07-12,4000,19,2026-03-01,4
+M0023,Rabia Ansari,46,Male,Karachi,03004731947,2025-05-24,9000,18,,4
+M0286,Mehwish Ahmed,35,Male,Karachi,,2024-05-31,4500,,2024-08-08,3
+M0180,Mehwish Hussain,51,Female,Karachi,03199610311,2024-06-04,7500,2,2024-09-04,5
+M0175,Sana Ansari,18,Female,Karachi,03008239880,2024-06-05,6000,6,2024-11-20,4
+M0085,Ali Baig,55,Female,Islamabad,03001025517,2025-04-14,4500,28,2025-05-28,4
+M0147,Mehwish Khan,48,Male,Karachi,,2024-12-17,4500,2,2025-08-06,3
+M0029,Noor Ahmed,35,female,Lahore,03004292310,2024-08-25,5000,0,2025-05-26,5
+M0217,Ayesha Ahmed,999,Male,Karachi,03311805260,2025-04-22,4500,20,2025-08-13,1
+M0051, Mehwish Sheikh ,32,Male,Lahore,3005773361,21/05/2024,9000,7,2024-07-12,1
+M0105,Zain Ansari,55,Male,Karachi,03467631019,2024-11-23,0,7,2025-07-10,5
+M0152,Sana Raza,60,Female,Lahore,+92 300 2477708,2025-01-07,5000,99,,5
+M0215,Zain Khan,48,Male,LHR,03006463719,2024-05-20,9000,0,2025-01-04,5
+M0062,Daniyal Raza,48,Male,Lahore,,2025-02-30,4500,14,2024-05-17,4
+M0201,Ayesha Ansari,50,,Karachi,03222841616,&quot;Mar 20, 2025&quot;,4500,0,,
+M0002,Ali Sheikh,24,Female,Islamabad,03002234021,2024-06-09,4500,26,2025-02-27,
+M0068,Ayesha Ahmed,52,Female,Karachi,03005444980,&quot;Jun 17, 2025&quot;,4000,,2025-10-27,
+M0200,Bilal Ahmed,39,Female ,Karachi,03005157269,2025-09-22,3000,10,2026-03-11,5
+M0140,Mehwish Qureshi,22,Female,Lahore,03184823030,2024-03-10,&quot;Rs 4,500&quot;,6,2024-06-11,3
+M0170,Iqra Raza,26,Female,ISB,+92 300 8510482,2024-10-11,15000,20,2024-11-23,1
+M0208,Rabia Baig,34,Female,Lahore,03406739677,2025-04-03,9000,6,2025-08-14,3
+M0132,FARHAN AHMED,18,Male,Islamabad,03003735657,2025-04-11,4000,7,2025-10-28,1
+M0066,Bilal Siddiqui,18,Female,Lahore,03008940285,2025-08-01,6000,11,2025-08-22,3
+M0284,Maryam Malik,23,Male,Lahore,03003698926,2025-07-06,5000,17,2025-09-02,2
+M0128,Fatima Khan,26,Female,Lahore,03001094884,17/04/2025,4500,7,2025-04-20,5
+M0124, Shahid Qureshi ,36,MALE,karachi,+92 300 7944885,2024-12-23,9000,16,2025-05-28,2
+M0033,Zain Baig,30,Male,Karachi,03001126464,2025-05-16,3000,-3,2025-10-21,2
+M0198,Noor Hussain,twenty-five,Female,Lahore,+92 300 5891486,2024-02-21,4500,13,2024-02-23,4
+M0261,Noor Raza,23,Female,Karachi,0300 597 7818,2024-03-23,4500,14,2024-04-27,2
+M0133,Hamza Hussain,28,Male,Karachi,03369969995,2025-09-02,7500,3,2025-12-05,
+M0153,Maryam Baig,47,Female,Islamabad,03002849105,13/03/2024,5000,17,2024-09-05,2
+M0184,Daniyal Raza,23,Male,Karachi,03163644780,2025-08-13,7500,3,2026-05-07,5
+M0058,Iqra Khan,34,Female,Lahore,0300 202 9199,2025-07-31,7500,22,2026-04-01,3
+M0072,Ali Hussain,43 yrs,Male,Karachi,03102159395,28/10/2024,9000,6,2025-01-24,3
+M0075,Sana Malik,33,Male,Karachi,03403284984,2025-04-20,6000,11,2025-06-01,4
+M0275,Ali Qureshi,43,Female,Islamabad,03007605214,2025-09-06,6000,11,2026-04-28,3
+M0196,Usman Qureshi,28,Female,Karachi,03319838598,2024-05-08,7500,5,2024-07-09,2
+M0171,MEHWISH QURESHI,42,Female,Lahore,03002218070,2024-06-17,3000,16,2024-12-01,4
+M0294,Noor Malik,35,Male,Karachi,03164399174,2025-06-21,4000,28,2025-12-28,5
+M0141,Hamza Sheikh,52,Male,Karachi,03008577390,2025-03-03,4.5k,28,2025-12-28,5
+M0090,Noor Siddiqui,28,Female,LHR,03004404362,2025-04-05,6000,2,2025-06-13,2
+M0292,Saad Ansari,29,Male,Karachi,03001957113,2025-04-23,5000,23,2025-06-20,4
+M0241,Ali Raza,22,Male,Islamabad,03009713046,2025-09-09,6000,21,2025-10-07,3
+M0055,Saad Ansari,52,Female,Karachi,03137725428,2025-09-20,5000,20,2026-04-07,5
+M0209,Iqra Baig,45,Female,Karachi,03432649681,2025-07-24,6000,22,2025-11-19,6
+M0293,Sana Siddiqui,58,Male,Lahore,03001825560,2025-09-19,4500,19,2026-06-19,4
+M0238,Ali Raza,58,Female,Lahore,0300 824 2109,2025-07-16,6000,7,2025-12-28,1
+M0005,Farhan Hussain,20,Male,Karachi,3006803362,2024-12-02,6000,26,2025-06-09,1
+M0164,Ali Ahmed,31,Female,Karachi,03401664379,22/05/2024,4000,6,2024-10-16,2
+M0230,Ayesha Malik,38,Male,Lahore,03005990096,2024-08-24,4000,,2024-08-08,3
+M0149,Zain Raza,40,Female,,03133946252,30/07/2024,4500,28,,1
+M0300, Zain Khan ,26,MALE,Karachi,03008090298,2024-05-30,9000,28,2024-08-27,4
+M0258,Iqra Baig,55,Male,,03002394713,2024-06-20,5000,5,2024-09-19,
+M0030,Iqra Siddiqui,43,Male,Karachi,03308160028,2024-05-20,4500,13,2024-05-27,N/A
+M0304,zain ahmed,29,Female,Karachi,03337152884,2025-04-12,7500,8,2025-05-06,0
+M0125,Ali Khan,54,Female,Islamabad,03001985605,2025-04-29,4500,10,,4
+M0263,Zain Ahmed,29,Female,Karachi,03337152884,2025-04-12,7500,8,2025-05-06,0
+M0009,MARYAM AHMED,21,M,Lahore,03145767055,2024-10-13,5000,9,2025-06-17,4
+M0015,Fatima Ansari,37,Male,Karachi,03001262511,2024-01-15,3000,3,2024-10-15,2
+M0214,Talha Ahmed,33,Female,Karachi,03001784605,2025-01-13,4000,27,2025-05-28,3
+M0016,Bilal Raza,43,Female,Karachi,03003712656,2025-06-30,7500,19,2025-05-19,2
+M0065,Hamza Ahmed,,Female,Islamabad,+92 300 8141218,2024-10-06,9000,5,2025-02-03,4
+M0191,Hamza Raza,43,Male,Karachi,03347425378,2024-05-06,6000,4,2024-08-16,5
+M0106,Hira Malik,38,MALE,Krachi,03007145507,2024-01-01,6000,16,2024-06-09,3
+M0083,Talha Ansari,25,Male,Karachi,03003059372,2025-02-26,9000,26,2025-09-16,0
+M0295,Areeba Baig,32,Male,ISB,03003030357,21/01/2024,9000,1,2024-10-20,4
+M0293 ,sana siddiqui,58,Male,Lahore,03001825560,2025-09-19,4500,19,2026-06-19,4
+M0239,Bilal Sheikh,58,Male,Karachi,03151255970,2024-07-12,3000,3,2024-10-26,2
+M0039, Ali Khan ,45,Female,Krachi,03008852047,2025-06-23,&quot;Rs 5,000&quot;,14,2025-08-05,5
+M0213,Saad Malik,26,Male,Karachi,03004471774,2025-09-14,7500,6,2026-04-07,1
+M0154,Usman Ahmed,55,Male,Karachi ,03255833679,02/07/2024,4000,17,2024-09-02,4
+M0173,Fatima Siddiqui,38,female,KHI,+92 300 9115171,2025-05-12,6000,17,2025-09-21,4
+M0122,Talha Khan,49,Male,Lahore,03003043593,17/10/2024,9000,18,2024-10-18,1
+M0242,Daniyal Khan,32,Female,Karachi,03333030226,2024-05-31,4500,12,2024-12-15,4
+M0181,Farhan Raza,40,Male,karachi,03009962720,2025-03-15,6000,20,2025-09-14,5
+M0079,Ali Hussain,31,Male,Karachi,03201736506,2024-12-01,4500,,2024-12-24,1
+M0098,Rabia Malik,,Male,Karachi,03333593507,2025-07-12,5000,18,2026-05-01,2
+M0089,Ali Ahmed,33,Male,Karachi,03144184872,&quot;Feb 27, 2024&quot;,4000,4,,3
+M0298,Fatima Raza,,Male,Karachi,+92 300 3214169,2025-03-16,,14,2025-12-22,
+M0166,Areeba Hussain,46,Male,Karachi,3007846531,2024-07-23,7500,13,2024-12-03,1
+M0179,Hira Sheikh,23,Female,Karachi,0346-4389655,2024-05-31,6000,6,2024-09-02,2
+M0004,Fatima Siddiqui,24,Male,KHI,+92 313 1728883,2025-05-03,7500,26,,4
+M0118,Ali Sheikh,42,Male,Lahore,03003714244,2025-02-15,&quot;Rs 7,500&quot;,24,2025-05-29,5
+M0046,Areeba Baig,41,Female,Karachi,03197132122,01/03/2025,6000,5,,4
+M0028,Fatima Ahmed,42,Female,Karachi,03184485231,2025-05-09,3000,8,2026-01-30,4
+M0006,Zain Khan,35,female,Karachi,0335-2870981,2024-06-10,&quot;Rs 4,500&quot;,10,2024-06-14,
+M0123,Fatima Malik,47,Male,Lahore,03006967761,2024-02-22,7500,15,2024-06-21,2
+M0254,Saad Ahmed,37,Male,Lahore,03491913366,2025-07-15,,9,2025-09-21,3
+M0054,Rabia Qureshi,50,Male,Lahore,03378147524,2024-01-12,6000,13,2024-06-12,4
+M0064,Hira Hussain,45,Male,Karachi,0300 968 8730,2025-07-06,6000,0,2025-07-16,3
+M0279,Talha Siddiqui,21,Male,Karachi,03137169162,2024-11-19,4000,24,2025-09-14,5
+M0038, Fatima Raza ,59,Male,Karachi,03328258939,2025-04-16,9000,13,2025-08-25,4
+M0256,Mehwish Malik,39,Female,Lahore,03002418723,2024-08-03,15000,24,2025-04-08,1
+M0095,Maryam Baig,25,Female,KHI,03009844589,2025-04-17,7500,28,,1
+M0288,Usman Qureshi,35,Male,Lahore,0300 226 0596,15/07/2024,4000,23,2024-08-03,1
+M0027,Talha Ahmed,18,Male,Islamabad,03488282604,2025-02-04,6000,22,2025-02-12,1
+M0303,bilal hussain,25,Male,Lahore,0326-5454280,04/06/2024,&quot;Rs 4,500&quot;,13,2024-10-22,3
+M0026,Usman Baig,53,Female,Lahore,03009947216,2024-12-13,5000,,2025-08-24,1
+M0108,Ali Raza,41,Female,Karachi,03301059331,2025-01-06,,3,2025-07-30,N/A
+M0099,Noor Khan,58,Other,Karachi,03007175868,2024-05-29,4500,22,2024-07-15,
+M0252,Fatima Sheikh,51,Female,Lahore,3002875390,2025-07-23,4000,5,2025-11-22,5
+M0235,Fatima Raza,55,Male,LHR,03342286566,2027-01-05,4000,11,2024-07-10,1
+M0221,Mehwish Baig,19,Male,Karachi,03005174467,2024-04-09,7500,17,2024-04-25,2
+M0096,Hamza Khan,,Female,Karachi,03008296174,2024-10-07,9000,25,2024-11-11,2
+M0226,Ayesha Siddiqui,23,F,Karachi,0300-4060903,&quot;Dec 09, 2024&quot;,5000,17,2025-05-01,
+M0129,Hamza Raza,29,Female,Karachi,03353307367,2025-03-11,4000,,2025-11-03,3
+M0155,Noor Ahmed,43,Male,Karachi,03479535059,&quot;Mar 22, 2024&quot;,6000,10,2024-12-21,2
+M0139,Hamza Khan,54,Male,Krachi,03116364678,2025-03-03,4000,17,2025-10-23,3
+M0249,Farhan Siddiqui,47,Male,Lahore,03442076620,18/01/2024,5000,18,2024-09-06,4
+M0205,Usman Ansari,35,,Karachi,03301016320,2025-06-14,450000,,2026-03-21,N/A
+M0256,Mehwish Malik,39,Female,Lahore,03002418723,2024-08-03,15000,24,2025-04-08,1
+M0289,Noor Raza,30,Male,KHI,03008724547,2024-04-27,&quot;Rs 4,500&quot;,19,2024-03-16,1
+M0019,Farhan Malik,43,Female,Lahore,03418924872,2024-06-16,&quot;Rs 4,500&quot;,25,2024-09-12,4
+M0119,Daniyal Siddiqui,43,M,Lahore,03008128487,2025-07-05,5000,7,2025-11-30,6
+M0131,Hira Raza,27,Male,Karachi,03257284686,2024-02-19,,21,2024-10-16,2
+M0081,Rabia Sheikh,49,Male,Islamabad,0338-7816722,26/03/2024,4000,,2024-08-16,2
+M0283,Mehwish Siddiqui,24,Male,Karachi,03131273324,2025-01-30,3000,2,2025-02-17,5
+M0008,Hira Khan,59,Female,Karachi,03009786237,2024-03-05,7500,21,2024-07-22,3
+M0056,Daniyal Siddiqui,45,Female,Islamabad,,2025-02-27,&quot;Rs 9,000&quot;,6,2025-10-07,3
+M0052,Ali Sheikh,58,Female,Karachi,03003853851,2024-09-07,4500,19,2024-10-06,1
+M0176, Talha Siddiqui ,twenty-five,Female,Karachi,03007615540,2024-07-16,9000,2,2024-12-16,5
+M0088,Farhan Baig,29,Female,Karachi,03006064867,06/02/2024,7500,28,,4
+M0066,Bilal Siddiqui,18,Female,Lahore,03008940285,2025-08-01,6000,11,2025-08-22,3
+M0136,HIRA ANSARI,46,Male,Karachi,03004764735,2024-10-25,6000,16,,5
+M0156,Rabia Hussain,54,Female,Islamabad,03446355082,2024-10-13,4000,20,,
+M0060,Iqra Raza,36 yrs,Male,Karachi,03006684798,23/01/2025,9000,12,,4
+M0245,Shahid Hussain,37,Female,Islamabad,03134517065,2025-09-06,3000,14,2025-09-08,
+M0260,Talha Ansari,18,Other,Islamabad,,24/07/2024,4000,15,2025-05-12,1
+M0197,Noor Siddiqui,23,Female,,03111598162,2024-06-01,7500,4,2024-09-13,5
+M0269,Shahid Hussain,43,Male,Karachi ,3004452495,16/09/2025,3000,12,2026-06-08,4
+M0224,NOOR AHMED,52,Female,Lahore,03243084925,2024-04-25,3000,21,2024-05-13,
+M0101,Ali Khan,23,Male,Karachi,03006250147,2024-07-14,7500,23,2024-12-29,N/A
+M0036,Ayesha Sheikh,53,Female,KHI,0320-1196552,2024-12-22,4000,8,2025-09-14,5
+M0143,Hamza Hussain,41,Female,Karachi,03001601930,2025-07-31,4000,2,2026-02-23,3
+M0236,Ali Siddiqui,,Female,Lahore,03131456921,2024-11-24,7500,6,2025-08-04,1
+M0086, Bilal Khan ,54,M,Lahore,03007056625,12/06/2025,5000,24,2025-09-27,3
+M0219,Hira Ahmed,20,Male,Karachi,03003221477,07/03/2025,4500,6,2025-06-16,5
+M0045,Saad Malik,999,Male,Lahore,03007744596,2024-07-30,4000,26,2025-01-31,4
+M0076,Usman Ansari,56,Female,KHI,03441841473,2025-01-08,7500,24,2025-01-12,
+M0061,Farhan Ansari,41,Male,Lahore,03229759471,2024-04-16,&quot;Rs 4,500&quot;,20,2024-12-07,2
+M0127,SAAD HUSSAIN,51,Female,Karachi,3004862078,2025-05-19,5000,2,2025-06-18,1
+M0074,Hira Ahmed,54,Male,lahore,,2025-04-25,6000,19,2025-09-26,1
+M0177, Maryam Ansari ,26,Female,Karachi,03137630131,2025-01-29,6000,6,2025-05-31,
+M0212,Bilal Sheikh,52,Male,Karachi,03008859247,2024-05-15,7500,28,2024-08-02,4
+M0157,Saad Qureshi,56,Female,Islamabad,03005828607,2024-02-13,4000,0,2024-11-30,4
+M0163,Noor Baig,50,Male,Karachi,,2025-05-14,4500,18,2025-06-07,3
+M0281,Bilal Qureshi,41,Male,Islamabad,03251633344,2024-01-08,3000,19,2024-09-19,5
+M0268,Ali Ahmed,21,Female,Karachi,03005004419,2025-09-06,3000,7,2025-12-24,4
+M0082,Noor Ansari,36,Female,Karachi,03007686440,2024-06-25,,3,2024-07-09,2
+M0227,Areeba Khan,57,Male,Karachi ,03297638339,2024-05-06,&quot;Rs 4,500&quot;,22,2024-10-28,5
+M0001,Usman Malik,44,Female,Karachi,0300-4769613,2025-06-16,3000,,2026-03-20,1
+M0216,Zain Hussain,25,Male,islamabad,03004384810,2025-04-26,7500,0,2025-09-21,2
+M0299,Bilal Sheikh,35,Female,Karachi,03389167130,2024-06-01,7500,4,2025-01-11,3
+M0172,Maryam Sheikh,39,Female,Karachi,03004571474,2027-01-05,7500,6,2025-03-03,4
+M0041, Zain Ansari ,42,Female,Karachi,03009608760,2024-02-20,5000,3,2024-12-11,4
+M0145,Iqra Raza,47,Female,Lahore,03008787274,&quot;Nov 14, 2024&quot;,6000,12,2025-08-02,2
+M0042,Usman Raza,29,,Lahore,03133459176,2025-09-27,,2,2026-05-17,1
+M0262,Shahid Khan,48,Male,Karachi,0323 298 8554,18/12/2024,4500,9,2025-02-05,4
+M0255,Talha Raza,24,male,Lahore,03216273699,2025-01-13,5000,3,2025-06-01,5
+M0121,Mehwish Qureshi,29,M,Karachi,03005861103,2025-08-28,7500,21,2026-03-16,4
+M0232 ,iqra siddiqui,34,Male,Lahore,03003953263,2024-08-28,3000,,2025-05-29,N/A
+M0272,Bilal Hussain,25,Male,Lahore,0326-5454280,04/06/2024,&quot;Rs 4,500&quot;,13,2024-10-22,3
+</textarea>
+<h3>First rows (preview)</h3><div class="wrap"><table><thead><tr><th>member_id</th><th>full_name</th><th>age</th><th>gender</th><th>city</th><th>phone</th><th>join_date</th><th>monthly_fee</th><th>sessions_per_month</th><th>last_visit</th><th>satisfaction</th></tr></thead><tbody><tr><td>M0012</td><td>Talha Hussain</td><td>33</td><td>Male</td><td>Lahore</td><td>0300-7919617</td><td>05/02/2024</td><td>0</td><td>4</td><td>2024-06-03</td><td>5</td></tr><tr><td>M0035</td><td>Shahid Sheikh</td><td>43</td><td>Female</td><td></td><td>03005582659</td><td>2024-11-04</td><td>3000</td><td>1</td><td>2025-08-12</td><td>2</td></tr><tr><td>M0109</td><td>Mehwish Ansari</td><td>39</td><td>Male</td><td>ISB</td><td>12345</td><td>2024-07-26</td><td>4500</td><td>2</td><td>2025-05-09</td><td>4</td></tr><tr><td>M0047</td><td>Bilal Siddiqui</td><td>27</td><td>M</td><td>Lahore</td><td>03118252932</td><td>11/12/2024</td><td>4500</td><td>18</td><td>2025-04-26</td><td>4</td></tr><tr><td>M0021</td><td>Bilal Qureshi</td><td>48</td><td>Male</td><td>Lahore</td><td>03001553690</td><td>2024-06-27</td><td>Rs 4,500</td><td>17</td><td>2024-12-20</td><td></td></tr><tr><td>M0187</td><td>Ayesha Hussain</td><td>46</td><td>Male</td><td>Lahore</td><td>03488377568</td><td>2024-03-08</td><td>9000</td><td>5</td><td>2024-07-10</td><td>5</td></tr><tr><td>M0302</td><td>ayesha ansari</td><td>50</td><td></td><td>Karachi</td><td>03222841616</td><td>Mar 20, 2025</td><td>4500</td><td>0</td><td></td><td></td></tr><tr><td>M0059</td><td>Hamza Qureshi</td><td>56</td><td>Male</td><td>Lahore</td><td>03001390529</td><td>2025-01-13</td><td>0</td><td>2</td><td>2025-08-01</td><td>3</td></tr></tbody></table></div>
+<script>var b=document.getElementById('b'),t=document.getElementById('t'),m=document.getElementById('m');
+b.onclick=function(){t.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}
+if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t.value).then(function(){m.textContent='Copied.';},function(){m.textContent='Press Ctrl+C (or long-press, Copy).';});return;}
+m.textContent=ok?'Copied.':'Press Ctrl+C (or long-press, Copy).';};</script></body></html>

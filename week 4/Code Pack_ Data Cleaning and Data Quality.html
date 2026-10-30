@@ -1,0 +1,167 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Code Pack: Data Cleaning and Data Quality</title><style>:root{--bg:#f7f5ef;--ink:#1b2a41;--mut:#5f6b7a;--card:#ffffff;--bd:#e0dcd0;--ac:#d9661f;--code:#1b2a41;--codefg:#f7f5ef;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}}
+:root[data-theme="dark"]{--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--ink);font-family:Helvetica,Arial,sans-serif;padding:24px;line-height:1.5;max-width:980px}
+h1{font-family:Georgia,serif;margin:0 0 6px}h2{font-size:18px;margin:0}.mut{color:var(--mut)}.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin:16px 0}.card.hl{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 16px;font-size:15px;cursor:pointer}
+pre{margin:0;background:var(--code);color:var(--codefg);border-radius:10px;padding:14px;overflow-x:auto;font-size:14px;line-height:1.45}code{font-family:'Courier New',monospace}</style></head><body><h1>Code Pack: Data Cleaning and Data Quality</h1><p class="mut">Every code sample from the slides, in order, with the indentation exactly as Python needs it. Press Copy code, then paste into a Colab cell. The first card is the complete file for the lab. Each card is labelled with its slide ID (for example W04-S06).</p><div class="card" id="c-file-cleaning.py"><div class="top"><h2>Full file: cleaning.py</h2><button onclick="cp('k-file-cleaning.py',this)">Copy code</button></div><pre><code id="k-file-cleaning.py">from __future__ import annotations
+
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+RAW = Path(&#x27;data/raw/members.csv&#x27;)
+OUT = Path(&#x27;data/processed/members_clean.csv&#x27;)
+EXPORT = pd.Timestamp(&#x27;2026-10-01&#x27;)
+CITY = {&#x27;karachi&#x27;: &#x27;Karachi&#x27;, &#x27;khi&#x27;: &#x27;Karachi&#x27;,
+        &#x27;krachi&#x27;: &#x27;Karachi&#x27;, &#x27;lahore&#x27;: &#x27;Lahore&#x27;,
+        &#x27;lhr&#x27;: &#x27;Lahore&#x27;, &#x27;islamabad&#x27;: &#x27;Islamabad&#x27;,
+        &#x27;isb&#x27;: &#x27;Islamabad&#x27;}
+GENDER = {&#x27;m&#x27;: &#x27;Male&#x27;, &#x27;male&#x27;: &#x27;Male&#x27;, &#x27;f&#x27;: &#x27;Female&#x27;,
+          &#x27;female&#x27;: &#x27;Female&#x27;, &#x27;other&#x27;: &#x27;Other&#x27;}
+LOG: list[tuple[str, str, str]] = []
+
+
+def log(column: str, problem: str, decision: str) -&gt; None:
+    LOG.append((column, problem, decision))
+
+
+def to_number(s: pd.Series) -&gt; pd.Series:
+    t = s.str.lower()
+    t = t.str.replace(r&#x27;yrs|rs|,|\s&#x27;, &#x27;&#x27;, regex=True)
+    k = t.str.endswith(&#x27;k&#x27;).fillna(False)
+    num = pd.to_numeric(t.str.rstrip(&#x27;k&#x27;), errors=&#x27;coerce&#x27;)
+    return num.where(~k, num * 1000)
+
+
+def in_range(s: pd.Series, low: float, high: float,
+             name: str) -&gt; pd.Series:
+    bad = s.notna() &amp; ~s.between(low, high)
+    log(name, f&#x27;{int(bad.sum())} outside {low:g}-{high:g}&#x27;,
+        &#x27;set to missing; never guess a value&#x27;)
+    return s.where(~bad)
+
+
+def clean_phone(s: pd.Series) -&gt; pd.Series:
+    d = s.str.replace(r&#x27;\D&#x27;, &#x27;&#x27;, regex=True)
+    p92 = d.str.startswith(&#x27;92&#x27;, na=False)
+    d = d.where(~p92, &#x27;0&#x27; + d.str[2:])
+    short = d.str.len().eq(10) &amp; d.str.startswith(&#x27;3&#x27;, na=False)
+    d = d.where(~short, &#x27;0&#x27; + d)
+    return d.where(d.str.fullmatch(r&#x27;03\d{9}&#x27;).fillna(False))
+
+
+def parse_dates(s: pd.Series) -&gt; pd.Series:
+    iso = pd.to_datetime(s, format=&#x27;%Y-%m-%d&#x27;, errors=&#x27;coerce&#x27;)
+    dmy = pd.to_datetime(s, format=&#x27;%d/%m/%Y&#x27;, errors=&#x27;coerce&#x27;)
+    txt = pd.to_datetime(s, format=&#x27;%b %d, %Y&#x27;, errors=&#x27;coerce&#x27;)
+    d = iso.fillna(dmy).fillna(txt)
+    return d.where(d &lt;= EXPORT)
+
+
+def iqr_flag(s: pd.Series) -&gt; pd.Series:
+    q1, q3 = s.quantile([0.25, 0.75])
+    gap = 1.5 * (q3 - q1)
+    return (s &lt; q1 - gap) | (s &gt; q3 + gap)
+
+
+def clean(raw: pd.DataFrame) -&gt; pd.DataFrame:
+    df = raw.apply(lambda c: c.str.strip())
+    df = df.replace({&#x27;&#x27;: np.nan, &#x27;N/A&#x27;: np.nan, &#x27;?&#x27;: np.nan})
+    df[&#x27;full_name&#x27;] = df[&#x27;full_name&#x27;].str.title()
+    df[&#x27;gender&#x27;] = df[&#x27;gender&#x27;].str.lower().map(GENDER)
+    df[&#x27;gender&#x27;] = df[&#x27;gender&#x27;].fillna(&#x27;Unknown&#x27;)
+    city = df[&#x27;city&#x27;].str.lower().map(CITY)
+    assert not (df[&#x27;city&#x27;].notna() &amp; city.isna()).any()
+    df[&#x27;city&#x27;] = city.fillna(&#x27;Unknown&#x27;)
+    n = len(df)
+    df = df.drop_duplicates()
+    log(&#x27;rows&#x27;, f&#x27;{n - len(df)} duplicate rows&#x27;, &#x27;dropped&#x27;)
+    df[&#x27;phone&#x27;] = clean_phone(df[&#x27;phone&#x27;])
+    df[&#x27;age&#x27;] = in_range(to_number(df[&#x27;age&#x27;]), 14, 90, &#x27;age&#x27;)
+    fee = to_number(df[&#x27;monthly_fee&#x27;])
+    df[&#x27;monthly_fee&#x27;] = in_range(fee, 1000, 20000, &#x27;fee&#x27;)
+    sess = to_number(df[&#x27;sessions_per_month&#x27;])
+    df[&#x27;sessions_per_month&#x27;] = in_range(sess, 0, 31, &#x27;sessions&#x27;)
+    sat = to_number(df[&#x27;satisfaction&#x27;])
+    df[&#x27;satisfaction&#x27;] = in_range(sat, 1, 5, &#x27;satisfaction&#x27;)
+    for col in (&#x27;join_date&#x27;, &#x27;last_visit&#x27;):
+        df[col] = parse_dates(df[col])
+    key = df[&#x27;full_name&#x27;] + df[&#x27;phone&#x27;].fillna(&#x27;?&#x27;)
+    dup = key.duplicated(keep=False)
+    df[&#x27;possible_duplicate&#x27;] = dup &amp; df[&#x27;phone&#x27;].notna()
+    df[&#x27;fee_outlier&#x27;] = iqr_flag(df[&#x27;monthly_fee&#x27;])
+    df[&#x27;visit_before_join&#x27;] = df[&#x27;last_visit&#x27;] &lt; df[&#x27;join_date&#x27;]
+    return df
+
+
+def run_tests(df: pd.DataFrame) -&gt; None:
+    assert df[&#x27;member_id&#x27;].is_unique
+    assert df[&#x27;age&#x27;].dropna().between(14, 90).all()
+    assert df[&#x27;monthly_fee&#x27;].dropna().between(1000, 20000).all()
+    assert df[&#x27;city&#x27;].isin([*CITY.values(), &#x27;Unknown&#x27;]).all()
+    assert df[&#x27;join_date&#x27;].dropna().le(EXPORT).all()
+    assert df[&#x27;phone&#x27;].dropna().str.fullmatch(r&#x27;03\d{9}&#x27;).all()
+
+
+def main() -&gt; None:
+    raw = pd.read_csv(RAW, dtype=str, keep_default_na=False)
+    df = clean(raw)
+    run_tests(df)
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(OUT, index=False)
+    print(f&#x27;Rows: {len(raw)} -&gt; {len(df)}&#x27;)
+    print(df.isna().sum()[lambda s: s &gt; 0].to_string())
+    flags = [&#x27;possible_duplicate&#x27;, &#x27;fee_outlier&#x27;,
+             &#x27;visit_before_join&#x27;]
+    print(df[flags].sum().to_string())
+    for column, problem, decision in LOG:
+        print(f&#x27;{column}: {problem} -&gt; {decision}&#x27;)
+
+
+if __name__ == &#x27;__main__&#x27;:
+    main()
+</code></pre></div><div class="card" id="c-W04-S05"><div class="top"><h2>W04-S05</h2><button onclick="cp('k-W04-S05',this)">Copy code</button></div><pre><code id="k-W04-S05">df = pd.read_csv(&#x27;members.csv&#x27;, dtype=str)
+df.shape
+df.isna().sum()
+df.nunique()
+df[&#x27;city&#x27;].value_counts(dropna=False)
+df[&#x27;age&#x27;].str.fullmatch(r&#x27;\d+&#x27;).value_counts(dropna=False)</code></pre></div><div class="card" id="c-W04-S09"><div class="top"><h2>W04-S09</h2><button onclick="cp('k-W04-S09',this)">Copy code</button></div><pre><code id="k-W04-S09">df[&#x27;age_missing&#x27;] = df[&#x27;age&#x27;].isna()
+df[&#x27;age&#x27;].isna().mean()                      # share missing
+df.groupby(&#x27;city&#x27;)[&#x27;age&#x27;].apply(lambda s: s.isna().mean())
+df[&#x27;age_filled&#x27;] = df[&#x27;age&#x27;].fillna(df[&#x27;age&#x27;].median())
+df[&#x27;fee_filled&#x27;] = df.groupby(&#x27;city&#x27;)[&#x27;monthly_fee&#x27;].transform(
+    lambda s: s.fillna(s.median()))</code></pre></div><div class="card" id="c-W04-S10"><div class="top"><h2>W04-S10</h2><button onclick="cp('k-W04-S10',this)">Copy code</button></div><pre><code id="k-W04-S10">df.duplicated().sum()
+df = df.drop_duplicates()
+key = df[&#x27;full_name&#x27;].str.lower() + df[&#x27;phone&#x27;].fillna(&#x27;?&#x27;)
+df[key.duplicated(keep=False)]       # look before you delete</code></pre></div><div class="card" id="c-W04-S11"><div class="top"><h2>W04-S11</h2><button onclick="cp('k-W04-S11',this)">Copy code</button></div><pre><code id="k-W04-S11">bad = df[&#x27;age&#x27;].notna() &amp; ~df[&#x27;age&#x27;].between(14, 90)
+df.loc[bad, &#x27;age&#x27;].value_counts()
+df[&#x27;age&#x27;] = df[&#x27;age&#x27;].where(~bad)       # set to missing</code></pre></div><div class="card" id="c-W04-S12"><div class="top"><h2>W04-S12</h2><button onclick="cp('k-W04-S12',this)">Copy code</button></div><pre><code id="k-W04-S12">t = s.str.lower()
+t = t.str.replace(r&#x27;yrs|rs|,|\s&#x27;, &#x27;&#x27;, regex=True)
+k = t.str.endswith(&#x27;k&#x27;).fillna(False)         # 4.5k means 4500
+num = pd.to_numeric(t.str.rstrip(&#x27;k&#x27;), errors=&#x27;coerce&#x27;)
+num = num.where(~k, num * 1000)
+df[&#x27;gender&#x27;] = df[&#x27;gender&#x27;].astype(&#x27;category&#x27;)</code></pre></div><div class="card" id="c-W04-S13"><div class="top"><h2>W04-S13</h2><button onclick="cp('k-W04-S13',this)">Copy code</button></div><pre><code id="k-W04-S13">CITY = {&#x27;karachi&#x27;: &#x27;Karachi&#x27;, &#x27;khi&#x27;: &#x27;Karachi&#x27;,
+        &#x27;krachi&#x27;: &#x27;Karachi&#x27;, &#x27;lahore&#x27;: &#x27;Lahore&#x27;}
+city = df[&#x27;city&#x27;].str.strip().str.lower().map(CITY)
+unmapped = df[&#x27;city&#x27;].notna() &amp; city.isna()
+df.loc[unmapped, &#x27;city&#x27;].unique()          # what did we miss?
+assert not unmapped.any()</code></pre></div><div class="card" id="c-W04-S14"><div class="top"><h2>W04-S14</h2><button onclick="cp('k-W04-S14',this)">Copy code</button></div><pre><code id="k-W04-S14">d = s.str.replace(r&#x27;\D&#x27;, &#x27;&#x27;, regex=True)
+p92 = d.str.startswith(&#x27;92&#x27;, na=False)
+d = d.where(~p92, &#x27;0&#x27; + d.str[2:])
+d.where(d.str.fullmatch(r&#x27;03\d{9}&#x27;).fillna(False))</code></pre></div><div class="card" id="c-W04-S15"><div class="top"><h2>W04-S15</h2><button onclick="cp('k-W04-S15',this)">Copy code</button></div><pre><code id="k-W04-S15">iso = pd.to_datetime(s, format=&#x27;%Y-%m-%d&#x27;, errors=&#x27;coerce&#x27;)
+dmy = pd.to_datetime(s, format=&#x27;%d/%m/%Y&#x27;, errors=&#x27;coerce&#x27;)
+d = iso.fillna(dmy)
+d.where(d &lt;= EXPORT)                 # a future join date is an error</code></pre></div><div class="card" id="c-W04-S16"><div class="top"><h2>W04-S16</h2><button onclick="cp('k-W04-S16',this)">Copy code</button></div><pre><code id="k-W04-S16">q1, q3 = s.quantile([0.25, 0.75])
+gap = 1.5 * (q3 - q1)
+flag = (s &lt; q1 - gap) | (s &gt; q3 + gap)</code></pre></div><div class="card" id="c-W04-S19"><div class="top"><h2>W04-S19</h2><button onclick="cp('k-W04-S19',this)">Copy code</button></div><pre><code id="k-W04-S19">assert df[&#x27;member_id&#x27;].is_unique
+assert df[&#x27;age&#x27;].dropna().between(14, 90).all()
+assert df[&#x27;monthly_fee&#x27;].dropna().between(1000, 20000).all()
+assert df[&#x27;city&#x27;].isin([&#x27;Karachi&#x27;, &#x27;Lahore&#x27;, &#x27;Islamabad&#x27;,
+                        &#x27;Unknown&#x27;]).all()
+assert df[&#x27;phone&#x27;].dropna().str.fullmatch(r&#x27;03\d{9}&#x27;).all()</code></pre></div><script>function cp(id,btn){var t=document.getElementById(id).textContent;var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}document.body.removeChild(a);
+function done(g){btn.textContent=g?'Copied':'Select the code and copy';setTimeout(function(){btn.textContent='Copy code';},1800);}
+if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t).then(function(){done(true);},function(){done(false);});}else{done(ok);}}
+function go(){var h=location.hash.replace('#','');if(!h)return;var e=document.getElementById('c-'+h);if(e){e.classList.add('hl');e.scrollIntoView();}}
+window.addEventListener('load',go);window.addEventListener('hashchange',go);</script></body></html>
