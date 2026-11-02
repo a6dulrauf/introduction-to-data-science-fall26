@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Code Pack: Descriptive Statistics</title><style>:root{--bg:#f7f5ef;--ink:#1b2a41;--mut:#5f6b7a;--card:#ffffff;--bd:#e0dcd0;--ac:#d9661f;--code:#1b2a41;--codefg:#f7f5ef;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}}
+:root[data-theme="dark"]{--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--ink);font-family:Helvetica,Arial,sans-serif;padding:24px;line-height:1.5;max-width:980px}
+h1{font-family:Georgia,serif;margin:0 0 6px}h2{font-size:18px;margin:0}.mut{color:var(--mut)}.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin:16px 0}.card.hl{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 16px;font-size:15px;cursor:pointer}
+pre{margin:0;background:var(--code);color:var(--codefg);border-radius:10px;padding:14px;overflow-x:auto;font-size:14px;line-height:1.45}code{font-family:'Courier New',monospace}</style></head><body><h1>Code Pack: Descriptive Statistics</h1><p class="mut">Every code sample from the slides, in order, with the indentation exactly as Python needs it. Press Copy code, then paste into a Colab cell. The first card is the complete file for the lab. Each card is labelled with its slide ID (for example W05-S05).</p><div class="card" id="c-file-week5.py"><div class="top"><h2>Full file: week5.py</h2><button onclick="cp('k-file-week5.py',this)">Copy code</button></div><pre><code id="k-file-week5.py">from __future__ import annotations
+
+from pathlib import Path
+
+import pandas as pd
+
+COL = &#x27;monthly_salary_pkr&#x27;
+
+
+def summarize(s: pd.Series) -&gt; pd.Series:
+    q1, q3 = s.quantile([0.25, 0.75])
+    return pd.Series({
+        &#x27;n&#x27;: len(s), &#x27;mean&#x27;: s.mean(), &#x27;median&#x27;: s.median(),
+        &#x27;std&#x27;: s.std(), &#x27;q1&#x27;: q1, &#x27;q3&#x27;: q3, &#x27;iqr&#x27;: q3 - q1,
+        &#x27;skew&#x27;: s.skew()})
+
+
+def iqr_flag(s: pd.Series) -&gt; pd.Series:
+    q1, q3 = s.quantile([0.25, 0.75])
+    gap = 1.5 * (q3 - q1)
+    return (s &lt; q1 - gap) | (s &gt; q3 + gap)
+
+
+def by_group(df: pd.DataFrame, col: str) -&gt; pd.DataFrame:
+    g = df.groupby(col)[COL]
+    return g.agg(n=&#x27;size&#x27;, median=&#x27;median&#x27;,
+                 mean=&#x27;mean&#x27;, std=&#x27;std&#x27;).round(0)
+
+
+def add_one(s: pd.Series, pay: float) -&gt; pd.Series:
+    return pd.concat([s, pd.Series([pay])], ignore_index=True)
+
+
+def main() -&gt; None:
+    df = pd.read_csv(Path(&#x27;salaries.csv&#x27;))
+    s = df[COL]
+    print(df.shape, df.isna().sum().sum())
+    print(summarize(s).round(2).to_string())
+    flagged = df[iqr_flag(s)]
+    print(&#x27;flagged:&#x27;, len(flagged))
+    print(flagged[&#x27;level&#x27;].value_counts().to_string())
+    print(by_group(df, &#x27;level&#x27;))
+    print(by_group(df, &#x27;department&#x27;))
+    for pay in (5_000_000,):
+        t = add_one(s, pay)
+        print(round(t.mean()), t.median(), round(t.std()))
+
+
+if __name__ == &#x27;__main__&#x27;:
+    main()
+</code></pre></div><div class="card" id="c-W05-S05"><div class="top"><h2>W05-S05</h2><button onclick="cp('k-W05-S05',this)">Copy code</button></div><pre><code id="k-W05-S05">scores = [20, 22, 21, 23, 25]
+sum(scores) / len(scores)           # mean: 22.2
+sorted(scores)[len(scores) // 2]    # median: 22
+from statistics import mean, median, mode
+mean(scores), median(scores), mode([1, 2, 2, 3])   # 22.2 22 2</code></pre></div><div class="card" id="c-W05-S06"><div class="top"><h2>W05-S06</h2><button onclick="cp('k-W05-S06',this)">Copy code</button></div><pre><code id="k-W05-S06">b = [20, 22, 21, 23, 25, 500]
+np.mean(b), np.median(b)       # 101.83  22.5</code></pre></div><div class="card" id="c-W05-S07"><div class="top"><h2>W05-S07</h2><button onclick="cp('k-W05-S07',this)">Copy code</button></div><pre><code id="k-W05-S07">a = [49, 50, 51]
+b = [10, 50, 90]
+np.mean(a), np.mean(b)                  # 50.0  50.0
+np.std(a, ddof=1), np.std(b, ddof=1)    # 1.0   40.0
+max(b) - min(b)                         # range: 80</code></pre></div><div class="card" id="c-W05-S08"><div class="top"><h2>W05-S08</h2><button onclick="cp('k-W05-S08',this)">Copy code</button></div><pre><code id="k-W05-S08">np.percentile(scores, [25, 50, 75])
+q1, q3 = s.quantile([0.25, 0.75])
+iqr = q3 - q1                       # the spread of the middle half
+(s &lt;= 65).mean() * 100              # percent of values at or below 65</code></pre></div><div class="card" id="c-W05-S10"><div class="top"><h2>W05-S10</h2><button onclick="cp('k-W05-S10',this)">Copy code</button></div><pre><code id="k-W05-S10">s.skew()                    # positive: right-skewed
+s.mean() - s.median()       # a big gap hints at skew
+s.hist(bins=30);  s.plot.box()</code></pre></div><div class="card" id="c-W05-S11"><div class="top"><h2>W05-S11</h2><button onclick="cp('k-W05-S11',this)">Copy code</button></div><pre><code id="k-W05-S11">q1, q3 = s.quantile([0.25, 0.75])
+gap = 1.5 * (q3 - q1)
+flag = (s &lt; q1 - gap) | (s &gt; q3 + gap)
+s[flag]</code></pre></div><div class="card" id="c-W05-S13"><div class="top"><h2>W05-S13</h2><button onclick="cp('k-W05-S13',this)">Copy code</button></div><pre><code id="k-W05-S13">x  = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5]
+y1 = [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68]
+y2 = [9.14, 8.14, 8.74, 8.77, 9.26, 8.10, 6.13, 3.10, 9.13, 7.26, 4.74]
+y3 = [7.46, 6.77, 12.74, 7.11, 7.81, 8.84, 6.08, 5.39, 8.15, 6.42, 5.73]
+x4 = [8, 8, 8, 8, 8, 8, 8, 19, 8, 8, 8]
+y4 = [6.58, 5.76, 7.71, 8.84, 8.47, 7.04, 5.25, 12.50, 5.56, 7.91, 6.89]
+sets = [(x, y1), (x, y2), (x, y3), (x4, y4)]</code></pre></div><div class="card" id="c-W05-S13-2"><div class="top"><h2>W05-S13 (part 2)</h2><button onclick="cp('k-W05-S13-2',this)">Copy code</button></div><pre><code id="k-W05-S13-2">import matplotlib.pyplot as plt
+fig, axes = plt.subplots(2, 2, figsize=(8, 6))
+for ax, (a, b) in zip(axes.ravel(), sets):
+    ax.scatter(a, b)
+    ax.set_title(f&#x27;mean y {np.mean(b):.2f}, corr {np.corrcoef(a, b)[0, 1]:.3f}&#x27;)
+plt.tight_layout()</code></pre></div><div class="card" id="c-W05-S14"><div class="top"><h2>W05-S14</h2><button onclick="cp('k-W05-S14',this)">Copy code</button></div><pre><code id="k-W05-S14">df.groupby(&#x27;level&#x27;)[COL].agg([&#x27;size&#x27;, &#x27;median&#x27;, &#x27;mean&#x27;, &#x27;std&#x27;]).round(0)
+df.groupby(&#x27;department&#x27;)[COL].agg([&#x27;size&#x27;, &#x27;median&#x27;, &#x27;mean&#x27;]).round(0)</code></pre></div><script>function cp(id,btn){var t=document.getElementById(id).textContent;var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}document.body.removeChild(a);
+function done(g){btn.textContent=g?'Copied':'Select the code and copy';setTimeout(function(){btn.textContent='Copy code';},1800);}
+if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t).then(function(){done(true);},function(){done(false);});}else{done(ok);}}
+function go(){var h=location.hash.replace('#','');if(!h)return;var e=document.getElementById('c-'+h);if(e){e.classList.add('hl');e.scrollIntoView();}}
+window.addEventListener('load',go);window.addEventListener('hashchange',go);</script></body></html>
