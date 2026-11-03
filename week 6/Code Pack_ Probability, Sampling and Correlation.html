@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Code Pack: Probability, Sampling and Correlation</title><style>:root{--bg:#f7f5ef;--ink:#1b2a41;--mut:#5f6b7a;--card:#ffffff;--bd:#e0dcd0;--ac:#d9661f;--code:#1b2a41;--codefg:#f7f5ef;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}}
+:root[data-theme="dark"]{--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--ink);font-family:Helvetica,Arial,sans-serif;padding:24px;line-height:1.5;max-width:980px}
+h1{font-family:Georgia,serif;margin:0 0 6px}h2{font-size:18px;margin:0}.mut{color:var(--mut)}.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin:16px 0}.card.hl{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 16px;font-size:15px;cursor:pointer}
+pre{margin:0;background:var(--code);color:var(--codefg);border-radius:10px;padding:14px;overflow-x:auto;font-size:14px;line-height:1.45}code{font-family:'Courier New',monospace}</style></head><body><h1>Code Pack: Probability, Sampling and Correlation</h1><p class="mut">Every code sample from the slides, in order, with the indentation exactly as Python needs it. Press Copy code, then paste into a Colab cell. The first card is the complete file for the lab. Each card is labelled with its slide ID (for example W06-S04).</p><div class="card" id="c-file-week6.py"><div class="top"><h2>Full file: week6.py</h2><button onclick="cp('k-file-week6.py',this)">Copy code</button></div><pre><code id="k-file-week6.py">from __future__ import annotations
+
+import numpy as np
+import pandas as pd
+
+RNG = np.random.default_rng(6)
+COL = &#x27;monthly_salary_pkr&#x27;
+
+
+def sample_means(s: pd.Series, n: int, reps: int) -&gt; np.ndarray:
+    values = s.to_numpy()
+    return np.array([RNG.choice(values, n, replace=False).mean()
+                     for _ in range(reps)])
+
+
+def biased_mean(df: pd.DataFrame, n: int) -&gt; float:
+    top = df.nlargest(n, &#x27;years_experience&#x27;)
+    return float(top[COL].mean())
+
+
+def partial_corr(df: pd.DataFrame, x: str, y: str, z: str) -&gt; float:
+    def leftover(col: str) -&gt; np.ndarray:
+        fit = np.polyfit(df[z], df[col], 1)
+        return (df[col] - np.polyval(fit, df[z])).to_numpy()
+    return float(np.corrcoef(leftover(x), leftover(y))[0, 1])
+
+
+def posterior(prior: float, sens: float, fpr: float) -&gt; float:
+    hit = prior * sens
+    return hit / (hit + (1 - prior) * fpr)
+
+
+def main() -&gt; None:
+    pay = pd.read_csv(&#x27;salaries.csv&#x27;)
+    s = pay[COL]
+    print(&#x27;population mean:&#x27;, round(s.mean()))
+    for n in (10, 30, 100):
+        m = sample_means(s, n, 1000)
+        print(n, round(m.mean()), round(m.std()),
+              round(s.std() / np.sqrt(n)))
+    print(&#x27;biased sample of 30:&#x27;, round(biased_mean(pay, 30)))
+    beach = pd.read_csv(&#x27;beach_days.csv&#x27;)
+    r = beach[&#x27;ice_cream_sales&#x27;].corr(beach[&#x27;rescue_calls&#x27;])
+    print(&#x27;ice cream vs rescues:&#x27;, round(r, 2))
+    p = partial_corr(beach, &#x27;ice_cream_sales&#x27;, &#x27;rescue_calls&#x27;,
+                     &#x27;temperature_c&#x27;)
+    print(&#x27;after removing temperature:&#x27;, round(p, 2))
+    t = pd.read_csv(&#x27;treatment.csv&#x27;)
+    print(t.groupby(&#x27;treatment&#x27;)[&#x27;recovered&#x27;].mean().round(2))
+    print(t.groupby([&#x27;severity&#x27;, &#x27;treatment&#x27;])[&#x27;recovered&#x27;]
+          .agg([&#x27;mean&#x27;, &#x27;size&#x27;]).round(2))
+    print(round(posterior(0.01, 0.90, 0.10), 3))
+
+
+if __name__ == &#x27;__main__&#x27;:
+    main()
+</code></pre></div><div class="card" id="c-W06-S04"><div class="top"><h2>W06-S04</h2><button onclick="cp('k-W06-S04',this)">Copy code</button></div><pre><code id="k-W06-S04">rng = np.random.default_rng(1)
+rolls = rng.integers(1, 7, size=10_000)
+(rolls == 6).mean()          # close to 1/6 = 0.1667
+(rolls[:20] == 6).mean()     # 20 rolls: far more variable</code></pre></div><div class="card" id="c-W06-S06"><div class="top"><h2>W06-S06</h2><button onclick="cp('k-W06-S06',this)">Copy code</button></div><pre><code id="k-W06-S06">def posterior(prior, sens, fpr):
+    hit = prior * sens
+    return hit / (hit + (1 - prior) * fpr)
+posterior(0.01, 0.90, 0.10)         # 0.083</code></pre></div><div class="card" id="c-W06-S09"><div class="top"><h2>W06-S09</h2><button onclick="cp('k-W06-S09',this)">Copy code</button></div><pre><code id="k-W06-S09">def sample_means(s, n, reps):
+    values = s.to_numpy()
+    return np.array([RNG.choice(values, n, replace=False).mean()
+                     for _ in range(reps)])
+
+m = sample_means(pay[&#x27;monthly_salary_pkr&#x27;], 30, 1000)
+m.mean(), m.std()          # centre near 144,015</code></pre></div><div class="card" id="c-W06-S11"><div class="top"><h2>W06-S11</h2><button onclick="cp('k-W06-S11',this)">Copy code</button></div><pre><code id="k-W06-S11">random_30 = pay[COL].sample(30, random_state=1).mean()
+top = pay.nlargest(30, &#x27;years_experience&#x27;)   # volunteers: the veterans
+biased = top[COL].mean()
+# population mean 144,015   biased sample mean 436,533</code></pre></div><div class="card" id="c-W06-S12"><div class="top"><h2>W06-S12</h2><button onclick="cp('k-W06-S12',this)">Copy code</button></div><pre><code id="k-W06-S12">np.corrcoef(x, y)[0, 1]
+df.corr(numeric_only=True)</code></pre></div><div class="card" id="c-W06-S14"><div class="top"><h2>W06-S14</h2><button onclick="cp('k-W06-S14',this)">Copy code</button></div><pre><code id="k-W06-S14">beach[&#x27;ice_cream_sales&#x27;].corr(beach[&#x27;rescue_calls&#x27;])      # 0.82
+partial_corr(beach, &#x27;ice_cream_sales&#x27;, &#x27;rescue_calls&#x27;,
+             &#x27;temperature_c&#x27;)                              # 0.00</code></pre></div><div class="card" id="c-W06-S15"><div class="top"><h2>W06-S15</h2><button onclick="cp('k-W06-S15',this)">Copy code</button></div><pre><code id="k-W06-S15">rng = np.random.default_rng(15)
+target = rng.normal(size=30)
+best = max(abs(np.corrcoef(target, rng.normal(size=30))[0, 1])
+           for _ in range(200))
+best                      # 0.44, from pure random noise</code></pre></div><div class="card" id="c-W06-S17"><div class="top"><h2>W06-S17</h2><button onclick="cp('k-W06-S17',this)">Copy code</button></div><pre><code id="k-W06-S17">t.groupby(&#x27;treatment&#x27;)[&#x27;recovered&#x27;].mean()
+t.groupby([&#x27;severity&#x27;, &#x27;treatment&#x27;])[&#x27;recovered&#x27;].agg([&#x27;mean&#x27;, &#x27;size&#x27;])</code></pre></div><script>function cp(id,btn){var t=document.getElementById(id).textContent;var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}document.body.removeChild(a);
+function done(g){btn.textContent=g?'Copied':'Select the code and copy';setTimeout(function(){btn.textContent='Copy code';},1800);}
+if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t).then(function(){done(true);},function(){done(false);});}else{done(ok);}}
+function go(){var h=location.hash.replace('#','');if(!h)return;var e=document.getElementById('c-'+h);if(e){e.classList.add('hl');e.scrollIntoView();}}
+window.addEventListener('load',go);window.addEventListener('hashchange',go);</script></body></html>
