@@ -1,0 +1,133 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Code Pack: Data Visualization</title><style>:root{--bg:#f7f5ef;--ink:#1b2a41;--mut:#5f6b7a;--card:#ffffff;--bd:#e0dcd0;--ac:#d9661f;--code:#1b2a41;--codefg:#f7f5ef;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}}
+:root[data-theme="dark"]{--bg:#121a26;--ink:#f1eee6;--mut:#a3b0bf;--card:#1b2636;--bd:#2c3a4e;--ac:#f08a4b;--code:#0b121b;--codefg:#f1eee6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--ink);font-family:Helvetica,Arial,sans-serif;padding:24px;line-height:1.5;max-width:980px}
+h1{font-family:Georgia,serif;margin:0 0 6px}h2{font-size:18px;margin:0}.mut{color:var(--mut)}.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin:16px 0}.card.hl{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}button{background:var(--ac);color:#fff;border:0;border-radius:8px;padding:8px 16px;font-size:15px;cursor:pointer}
+pre{margin:0;background:var(--code);color:var(--codefg);border-radius:10px;padding:14px;overflow-x:auto;font-size:14px;line-height:1.45}code{font-family:'Courier New',monospace}</style></head><body><h1>Code Pack: Data Visualization</h1><p class="mut">Every code sample from the slides, in order, with the indentation exactly as Python needs it. Press Copy code, then paste into a Colab cell. The first card is the complete file for the lab. Each card is labelled with its slide ID (for example W07-S09).</p><div class="card" id="c-file-week7.py"><div class="top"><h2>Full file: week7.py</h2><button onclick="cp('k-file-week7.py',this)">Copy code</button></div><pre><code id="k-file-week7.py">from __future__ import annotations
+
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+OUT = Path(&#x27;charts&#x27;)
+BLUE, ORANGE = &#x27;#0072B2&#x27;, &#x27;#D55E00&#x27;
+
+
+def save(fig: plt.Figure, name: str) -&gt; None:
+    OUT.mkdir(exist_ok=True)
+    fig.tight_layout()
+    fig.savefig(OUT / name, dpi=150)
+    plt.close(fig)
+
+
+def line_chart(df: pd.DataFrame) -&gt; str:
+    m = df.groupby(&#x27;month&#x27;)[&#x27;revenue_k&#x27;].sum()
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.plot(m.index, m.values, color=BLUE)
+    ax.set_xticks(m.index[::3])
+    ax.set_ylabel(&#x27;Revenue (Rs thousand)&#x27;)
+    ax.set_title(f&#x27;Revenue peaked in {m.idxmax()} at {m.max():,.0f}k&#x27;)
+    save(fig, &#x27;1_revenue_by_month.png&#x27;)
+    return str(m.idxmax())
+
+
+def bar_chart(df: pd.DataFrame) -&gt; pd.Series:
+    d = df.groupby(&#x27;department&#x27;)[&#x27;revenue_k&#x27;].sum().sort_values()
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.barh(d.index, d.values, color=BLUE)
+    ax.set_xlabel(&#x27;Revenue (Rs thousand)&#x27;)
+    ax.set_title(f&#x27;{d.index[-1]} earns {d.iloc[-1] / d.sum():.0%} of revenue&#x27;)
+    save(fig, &#x27;2_revenue_by_department.png&#x27;)
+    return d
+
+
+def hist_chart(df: pd.DataFrame) -&gt; float:
+    s = df[&#x27;revenue_k&#x27;]
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.hist(s, bins=30, color=BLUE)
+    ax.axvline(s.median(), color=ORANGE, label=&#x27;median&#x27;)
+    ax.set_xlabel(&#x27;Monthly revenue per region and department (k)&#x27;)
+    ax.set_title(&#x27;Most rows are small; a few are very large&#x27;)
+    ax.legend()
+    save(fig, &#x27;3_revenue_distribution.png&#x27;)
+    return float(s.skew())
+
+
+def box_chart(df: pd.DataFrame) -&gt; pd.Series:
+    order = df.groupby(&#x27;region&#x27;)[&#x27;revenue_k&#x27;].median().sort_values()
+    fig, ax = plt.subplots(figsize=(8, 4))
+    data = [df.loc[df[&#x27;region&#x27;] == r, &#x27;revenue_k&#x27;] for r in order.index]
+    ax.boxplot(data)
+    ax.set_xticklabels(order.index)
+    ax.set_ylabel(&#x27;Revenue per row (k)&#x27;)
+    ax.set_title(&#x27;Karachi and Lahore lead; spread grows with size&#x27;)
+    save(fig, &#x27;4_revenue_by_region.png&#x27;)
+    return order
+
+
+def scatter_chart(df: pd.DataFrame) -&gt; float:
+    typical = df.groupby([&#x27;region&#x27;, &#x27;department&#x27;])[&#x27;units&#x27;].transform(&#x27;mean&#x27;)
+    y = df[&#x27;units&#x27;] / typical
+    r = df[&#x27;discount_pct&#x27;].corr(y)
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.scatter(df[&#x27;discount_pct&#x27;], y, s=12, alpha=0.5, color=BLUE)
+    ax.set_xlabel(&#x27;Discount (%)&#x27;)
+    ax.set_ylabel(&#x27;Units vs typical (1.0 = typical)&#x27;)
+    ax.set_title(f&#x27;Deeper discounts, more units (r = {r:.2f})&#x27;)
+    save(fig, &#x27;5_discount_vs_units.png&#x27;)
+    return float(r)
+
+
+def main() -&gt; None:
+    df = pd.read_csv(&#x27;shop_monthly.csv&#x27;)
+    print(df.shape, df[&#x27;month&#x27;].min(), df[&#x27;month&#x27;].max())
+    print(&#x27;peak month:&#x27;, line_chart(df))
+    print(bar_chart(df).round(0).to_string())
+    print(&#x27;skew:&#x27;, round(hist_chart(df), 2))
+    print(box_chart(df).round(1).to_string())
+    print(&#x27;r:&#x27;, round(scatter_chart(df), 2))
+
+
+if __name__ == &#x27;__main__&#x27;:
+    main()
+</code></pre></div><div class="card" id="c-W07-S08"><div class="top"><h2>W07-S08</h2><button onclick="cp('k-W07-S08',this)">Copy code</button></div><pre><code id="k-W07-S08">fig, ax = plt.subplots(figsize=(8, 4))   # fig: canvas, ax: one chart
+ax.plot(x, y)
+ax.set_title(&#x27;...&#x27;);  ax.set_xlabel(&#x27;...&#x27;);  ax.set_ylabel(&#x27;...&#x27;)
+fig.savefig(&#x27;chart.png&#x27;, dpi=150)</code></pre></div><div class="card" id="c-W07-S09"><div class="top"><h2>W07-S09</h2><button onclick="cp('k-W07-S09',this)">Copy code</button></div><pre><code id="k-W07-S09">import matplotlib.pyplot as plt
+m = df.groupby(&#x27;month&#x27;)[&#x27;revenue_k&#x27;].sum()
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.plot(m.index, m.values, color=&#x27;#0072B2&#x27;)
+ax.set_xticks(m.index[::3])
+ax.set_ylabel(&#x27;Revenue (Rs thousand)&#x27;)
+ax.set_title(f&#x27;Revenue peaked in {m.idxmax()}&#x27;)</code></pre></div><div class="card" id="c-W07-S10"><div class="top"><h2>W07-S10</h2><button onclick="cp('k-W07-S10',this)">Copy code</button></div><pre><code id="k-W07-S10">d = df.groupby(&#x27;department&#x27;)[&#x27;revenue_k&#x27;].sum().sort_values()
+fig, ax = plt.subplots(figsize=(8, 4))
+ax.barh(d.index, d.values, color=&#x27;#0072B2&#x27;)
+ax.set_xlabel(&#x27;Revenue (Rs thousand)&#x27;)
+ax.set_title(f&#x27;{d.index[-1]} earns {d.iloc[-1] / d.sum():.0%}&#x27;)</code></pre></div><div class="card" id="c-W07-S11"><div class="top"><h2>W07-S11</h2><button onclick="cp('k-W07-S11',this)">Copy code</button></div><pre><code id="k-W07-S11">fig, (a, b) = plt.subplots(1, 2, figsize=(10, 4))
+a.hist(df[&#x27;revenue_k&#x27;], bins=30)
+a.axvline(df[&#x27;revenue_k&#x27;].median(), color=&#x27;#D55E00&#x27;)
+data = [g[&#x27;revenue_k&#x27;] for _, g in df.groupby(&#x27;region&#x27;)]
+b.boxplot(data)
+b.set_xticklabels(sorted(df[&#x27;region&#x27;].unique()))</code></pre></div><div class="card" id="c-W07-S12"><div class="top"><h2>W07-S12</h2><button onclick="cp('k-W07-S12',this)">Copy code</button></div><pre><code id="k-W07-S12">typical = df.groupby([&#x27;region&#x27;, &#x27;department&#x27;])[&#x27;units&#x27;].transform(&#x27;mean&#x27;)
+y = df[&#x27;units&#x27;] / typical
+fig, ax = plt.subplots()
+ax.scatter(df[&#x27;discount_pct&#x27;], y, s=12, alpha=0.5)
+df[&#x27;discount_pct&#x27;].corr(y)          # 0.38</code></pre></div><div class="card" id="c-W07-S13"><div class="top"><h2>W07-S13</h2><button onclick="cp('k-W07-S13',this)">Copy code</button></div><pre><code id="k-W07-S13">import seaborn as sns
+sns.set_theme(style=&#x27;whitegrid&#x27;)
+sns.barplot(data=df, y=&#x27;department&#x27;, x=&#x27;revenue_k&#x27;, estimator=&#x27;sum&#x27;)
+sns.boxplot(data=df, x=&#x27;region&#x27;, y=&#x27;revenue_k&#x27;)
+sns.histplot(data=df, x=&#x27;revenue_k&#x27;, hue=&#x27;region&#x27;, element=&#x27;step&#x27;)</code></pre></div><div class="card" id="c-W07-S15"><div class="top"><h2>W07-S15</h2><button onclick="cp('k-W07-S15',this)">Copy code</button></div><pre><code id="k-W07-S15">tot = df.groupby([&#x27;department&#x27;, &#x27;month&#x27;])[&#x27;revenue_k&#x27;].sum().unstack(0)
+fig, axes = plt.subplots(2, 3, figsize=(10, 5), sharex=True)
+for ax, name in zip(axes.ravel(), tot.columns):
+    ax.plot(tot.index, tot[name])
+    ax.set_title(name)
+    ax.set_xticks(tot.index[::6])</code></pre></div><div class="card" id="c-W07-S20"><div class="top"><h2>W07-S20</h2><button onclick="cp('k-W07-S20',this)">Copy code</button></div><pre><code id="k-W07-S20">d = df.groupby(&#x27;region&#x27;)[&#x27;revenue_k&#x27;].sum()
+plt.bar(d.index, d.values)
+plt.ylim(d.min() * 0.95, d.max() * 1.01)
+plt.title(&#x27;Regions&#x27;)</code></pre></div><script>function cp(id,btn){var t=document.getElementById(id).textContent;var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}document.body.removeChild(a);
+function done(g){btn.textContent=g?'Copied':'Select the code and copy';setTimeout(function(){btn.textContent='Copy code';},1800);}
+if(!ok&&navigator.clipboard){navigator.clipboard.writeText(t).then(function(){done(true);},function(){done(false);});}else{done(ok);}}
+function go(){var h=location.hash.replace('#','');if(!h)return;var e=document.getElementById('c-'+h);if(e){e.classList.add('hl');e.scrollIntoView();}}
+window.addEventListener('load',go);window.addEventListener('hashchange',go);</script></body></html>
