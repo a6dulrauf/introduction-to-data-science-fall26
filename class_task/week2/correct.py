@@ -2,7 +2,7 @@ from collections import Counter
 import csv
 from pathlib import Path
 
-path = Path('order.csv')
+path = Path('orders.csv')
 with path.open(newline='', encoding='utf-8') as f:
   rows = list(csv.DictReader(f))
 before_counts = Counter(row['city'] for row in rows)
